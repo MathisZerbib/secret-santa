@@ -30,7 +30,7 @@ const GiftDialog: React.FC<GiftDialogProps> = ({
         </DialogHeader>
         <p>
           Vous êtes sur le point de marquer &quot;{gift?.name}&quot; pour &quot;
-          {gift?.recipient}&quot; comme acheté.
+          {String(gift?.recipient)}&quot; comme acheté.
         </p>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
