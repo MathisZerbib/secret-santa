@@ -17,7 +17,7 @@ const themes = [
   { name: "Chapeau Père Noël", image: "/w-3.jpeg" },
   { name: "Pull Flocons", image: "/w-4.jpeg" },
   { name: "Symboles de Noël", image: "/w-5.jpeg" },
-  { name: "Spains colorés", image: "/w-6.jpeg" },
+  { name: "Sapins colorés", image: "/w-6.jpeg" },
 ];
 
 interface ThemesMenuProps {

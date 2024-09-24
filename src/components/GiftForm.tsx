@@ -118,7 +118,9 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
           onClick={() => setOpenDialog(true)}
           className="w-full sm:w-auto"
         >
-          {recipientName ? `Pour: ${recipientName}` : "Choisir un destinataire"}
+          {recipientName
+            ? `Pour : ${recipientName}`
+            : "Choisir un destinataire"}
         </Button>
 
         <Input

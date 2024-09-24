@@ -30,7 +30,7 @@ const ConfirmationDeleteGiftDialog: React.FC<
           Cadeau: <strong>{giftName}</strong>
         </p>
         <p>
-          Pour: <strong>{recipientName}</strong>
+          Pour : <strong>{recipientName}</strong>
         </p>
         <div className="flex space-x-4 mt-4">
           <Button onClick={onCancel} variant="outline">

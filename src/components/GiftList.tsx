@@ -137,7 +137,7 @@ export default function GiftList({
                 </>
               )}
               <span className="ml-2 text-sm text-gray-600">
-                (Pour: {gift.recipient && gift.recipient.name})
+                (Pour : {gift.recipient && gift.recipient.name})
               </span>
             </div>
             <div className="flex items-center">
