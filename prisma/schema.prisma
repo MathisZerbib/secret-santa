@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("SUPABASE_URL")
+}
+
+model Gift {
+  id          Int       @id @default(autoincrement())
+  name        String
+  bought      Boolean   @default(false)
+  link        String?
+  recipientId Int
+  recipient   Recipient @relation(fields: [recipientId], references: [id])
+}
+
+model Recipient {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+  gifts Gift[]
+}
