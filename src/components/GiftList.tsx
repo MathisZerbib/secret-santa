@@ -10,7 +10,7 @@ interface GiftListProps {
   gifts: Gift[];
   filter: string;
   onUpdateLink: (id: number, newLink: string) => void;
-  onConfirmBuy: (gift: Gift) => void;
+  // onConfirmBuy: (gift: Gift) => void;
   onUpdateName: (id: number, newName: string) => void;
   onDeleteGift: (id: number) => void; // New prop for deleting gifts
 }
@@ -19,7 +19,7 @@ export default function GiftList({
   gifts,
   filter,
   onUpdateLink,
-  onConfirmBuy,
+  // onConfirmBuy,
   onUpdateName,
   onDeleteGift, // Destructure the new delete handler
 }: GiftListProps) {
@@ -145,7 +145,7 @@ export default function GiftList({
                 initialLink={gift.link || ""}
                 onSave={(newLink) => onUpdateLink(gift.id, newLink)}
               />
-              {!gift.bought && (
+              {/* {!gift.bought && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -154,7 +154,7 @@ export default function GiftList({
                 >
                   Acheter
                 </Button>
-              )}
+              )} */}
               <Button
                 variant="outline"
                 size="sm"

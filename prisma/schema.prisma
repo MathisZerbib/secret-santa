@@ -22,3 +22,11 @@ model Recipient {
   email String @unique
   gifts Gift[]
 }
+
+
+model AppManager {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  token String @unique
+}
+

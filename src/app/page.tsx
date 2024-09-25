@@ -1,16 +1,13 @@
+// pages/index.tsx or app/page.tsx (depending on your Next.js version)
+
 "use client";
 
 import { useState, useEffect } from "react";
-import GiftForm from "@/components/GiftForm";
-import GiftList from "@/components/GiftList";
-import FilterInput from "@/components/FilterInput";
-import GiftDialog from "@/components/GiftDialog";
-import ThemesMenu from "@/components/ThemeMenu";
-import { Gift } from "@/types/gift";
+import MainContent from "../components/MainContent";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Gift } from "@/types/gift";
 
-// Fetch gifts from the API
-const getGifts = async () => {
+const getGifts = async (): Promise<Gift[]> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get`
@@ -25,214 +22,132 @@ const getGifts = async () => {
   }
 };
 
+const organizeSecretSanta = async (email: string, token: string) => {
+  try {
+    const response = await fetch("/api/organize-secret-santa", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, token }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to organize Secret Santa");
+    }
+
+    // Handle successful organization
+  } catch (error) {
+    console.error("Error organizing Secret Santa:", error);
+    throw error;
+  }
+};
+
+const initializeManager = async (email: string) => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/manager/init`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to initialize app manager");
+    }
+
+    const data = await response.json();
+    localStorage.setItem("managerToken", data.token);
+    return data.token;
+  } catch (error) {
+    console.error("Error initializing app manager:", error);
+    throw error;
+  }
+};
+
 export default function Home() {
-  const [gifts, setGifts] = useState<Gift[]>([]);
-  const [filter, setFilter] = useState("");
-  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
-  const [selectedGift, setSelectedGift] = useState<Gift | null>(null);
+  const [isManagerSet, setIsManagerSet] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [managerEmail, setManagerEmail] = useState("");
+  const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
 
-  // Load the initial data and theme
   useEffect(() => {
-    const loadInitialData = async () => {
-      const giftsData: Gift[] = await getGifts();
-      setGifts(giftsData);
-    };
-
-    const loadTheme = () => {
-      if (typeof window !== "undefined") {
-        const savedTheme = localStorage.getItem("selectedTheme");
-        if (savedTheme) {
-          setBackgroundImage(savedTheme);
-        }
-      }
-    };
-
-    loadInitialData();
-    loadTheme();
-  }, []);
-
-  // Set background image based on theme selection
-  const setBackgroundImage = (image: string) => {
-    document.body.style.backgroundImage = `url(${image})`;
-    localStorage.setItem("selectedTheme", image);
-  };
-
-  // Add a new gift to the list
-  const addGift = async (
-    newGift: string,
-    recipientName: string,
-    recipientEmail: string,
-    giftLink: string
-  ) => {
-    if (
-      newGift.trim() === "" ||
-      recipientEmail.trim() === "" ||
-      recipientName.trim() === ""
-    ) {
-      alert("Please fill all required fields.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/create`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            giftName: newGift,
-            recipientName: recipientName,
-            recipientEmail: recipientEmail,
-            link: giftLink,
-          }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to add gift");
-      }
-      const newGiftData = await response.json();
-      setGifts((prevGifts) => [...prevGifts, newGiftData]);
-    } catch (error) {
-      console.error("Error adding gift:", error);
-      alert("An error occurred while adding the gift. Please try again later.");
-    }
-  };
-
-  // Update the link for a gift
-  const updateGiftLink = async (id: number, newLink: string) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/update`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id, link: newLink }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update gift link");
-      }
-      setGifts((prevGifts) =>
-        prevGifts.map((gift) =>
-          gift.id === id ? { ...gift, link: newLink } : gift
-        )
-      );
-    } catch (error) {
-      console.error("Error updating gift link:", error);
-      alert("An error occurred while updating the gift link.");
-    }
-  };
-
-  // Update the name for a gift
-  const updateGiftName = async (id: number, newName: string) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/rename`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id, name: newName }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to update gift name");
-      }
-      setGifts((prevGifts) =>
-        prevGifts.map((gift) =>
-          gift.id === id ? { ...gift, name: newName } : gift
-        )
-      );
-    } catch (error) {
-      console.error("Error updating gift name:", error);
-      alert("An error occurred while updating the gift name.");
-    }
-  };
-
-  // Confirm buying a gift (show dialog)
-  const confirmBuyGift = (gift: Gift) => setSelectedGift(gift);
-
-  // Handle buying a gift
-  const buyGift = async () => {
-    if (selectedGift) {
+    const checkManager = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/buy`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: selectedGift.id }),
+          `${process.env.NEXT_PUBLIC_API_URL}/api/manager/get`
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Manager data:", data);
+          if (data[0]) {
+            setIsManagerSet(true);
+            const giftsData = await getGifts();
+            setInitialGifts(giftsData);
           }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to buy gift");
         }
-        setGifts((prevGifts) =>
-          prevGifts.map((gift) =>
-            gift.id === selectedGift.id ? { ...gift, bought: true } : gift
-          )
-        );
-        setSelectedGift(null);
       } catch (error) {
-        console.error("Error buying gift:", error);
-        alert("An error occurred while buying the gift.");
+        console.error("Error checking manager:", error);
+      } finally {
+        setIsLoading(false);
       }
+    };
+
+    checkManager();
+  }, []);
+
+  const handleManagerSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await initializeManager(managerEmail);
+      setIsManagerSet(true);
+      const giftsData = await getGifts();
+      setInitialGifts(giftsData);
+    } catch (error) {
+      console.error("Failed to set manager:", error);
+      alert("Failed to set manager. Please try again.");
     }
   };
 
-  // Delete a gift from the list
-  const deleteGift = async (id: number) => {
-    setGifts((prevGifts) => prevGifts.filter((gift) => gift.id !== id));
-  };
+  if (isLoading) {
+    return <div className="container mx-auto mt-10">Loading...</div>;
+  }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="absolute top-4 right-4">
-        <ThemesMenu setBackgroundImage={setBackgroundImage} />
-      </div>
-      <div className="max-w-2xl mx-auto">
-        <Card className="shadow-lg bg-white rounded-lg border border-gray-300">
+    <div className="container mx-auto mt-10">
+      {isManagerSet ? (
+        <>
+          <MainContent initialGifts={initialGifts} />
+        </>
+      ) : (
+        <Card className="bg-white">
           <CardHeader>
-            <CardTitle className="text-4xl font-bold text-center text-gray-800">
-              🎄 Liste de Cadeaux de Noël 🎁
-            </CardTitle>
+            <CardTitle>Créez un manager de secret santa</CardTitle>
           </CardHeader>
           <CardContent>
-            <GiftForm onAddGift={addGift} />
-            <FilterInput
-              filter={filter}
-              onFilterChange={setFilter}
-              isFilterExpanded={isFilterExpanded}
-              onToggleFilter={() => setIsFilterExpanded(!isFilterExpanded)}
-            />
-            {gifts.length > 0 ? (
-              <GiftList
-                gifts={gifts}
-                filter={filter}
-                onUpdateLink={updateGiftLink}
-                onUpdateName={updateGiftName}
-                onConfirmBuy={confirmBuyGift}
-                onDeleteGift={deleteGift}
+            <form onSubmit={handleManagerSubmit}>
+              <input
+                type="email"
+                value={managerEmail}
+                onChange={(e) => setManagerEmail(e.target.value)}
+                placeholder="Entrez l'email du manager"
+                required
+                className="w-full p-2 border rounded"
               />
-            ) : (
-              <p className="text-center text-gray-600 mt-4">No gifts found.</p>
-            )}
+              <button
+                type="submit"
+                className="mt-2 p-2 bg-blue-500 text-white rounded"
+              >
+                Créer le manager
+              </button>
+            </form>
           </CardContent>
         </Card>
-      </div>
-
-      <GiftDialog
-        gift={selectedGift}
-        onClose={() => setSelectedGift(null)}
-        onConfirmBuy={buyGift}
-      />
+      )}
     </div>
   );
 }

@@ -95,7 +95,6 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
     setGiftName("");
     setRecipientEmail("");
     setGiftLink("");
-    setRecipients([]);
     setRecipientName("");
     setNewRecipientName("");
     setNewRecipientEmail("");
