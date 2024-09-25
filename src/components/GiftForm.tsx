@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogOverlay,
+  DialogHeader,
   DialogTitle,
-} from "@radix-ui/react-dialog";
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface GiftFormProps {
   onAddGift: (
@@ -61,17 +63,33 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
   }) => {
     setRecipientEmail(recipient.email);
     setRecipientName(recipient.name);
-    setOpenDialog(false); // Close dialog after selecting recipient
+    setOpenDialog(false);
   };
 
-  const handleAddNewRecipient = () => {
+  const handleAddNewRecipient = async () => {
     if (newRecipientName && newRecipientEmail) {
-      const newRecipient = { name: newRecipientName, email: newRecipientEmail };
-      setRecipients((prev) => [...prev, newRecipient]);
-      setRecipientEmail(newRecipientEmail);
-      setRecipientName(newRecipientName);
-      setOpenDialog(false);
-      resetNewRecipientFields();
+      try {
+        const response = await fetch("/api/recipients/add", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: newRecipientName,
+            email: newRecipientEmail,
+          }),
+        });
+        if (!response.ok) throw new Error("Failed to add new recipient");
+        const newRecipient = await response.json();
+        setRecipients((prev) => [...prev, newRecipient]);
+        setRecipientEmail(newRecipient.email);
+        setRecipientName(newRecipient.name);
+        setOpenDialog(false);
+        resetNewRecipientFields();
+      } catch (error) {
+        console.error("Error adding new recipient:", error);
+        setError("Failed to add new recipient");
+      }
     }
   };
 
@@ -110,7 +128,6 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
           value={giftName}
           onChange={(e) => setGiftName(e.target.value)}
           placeholder="Nom du cadeau"
-          className="flex-grow p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
         <Button
@@ -127,22 +144,19 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
           value={giftLink}
           onChange={(e) => setGiftLink(e.target.value)}
           placeholder="Lien vers l'article (optionnel)"
-          className="flex-grow p-3 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      <Button onClick={handleSubmit} className="w-full transition duration-200">
+      <Button onClick={handleSubmit} className="w-full">
         Ajouter à la liste
       </Button>
 
-      {/* Recipient Selection Dialog */}
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogOverlay className="fixed inset-0 bg-black opacity-50" />
-        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-lg shadow-lg">
-          <DialogTitle className="text-lg font-semibold">
-            Choisir un destinataire
-          </DialogTitle>
-          <div className="space-y-4 mt-2 max-h-60 overflow-y-auto">
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Choisir un destinataire</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="h-[300px] pr-4">
             {loading ? (
               <div className="text-center">Chargement...</div>
             ) : recipients.length > 0 ? (
@@ -150,9 +164,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
                 <div
                   key={recipient.email}
                   onClick={() => handleSelectRecipient(recipient)}
-                  className="cursor-pointer hover:bg-gray-200 p-2 rounded-md transition duration-200"
-                  role="button"
-                  aria-label={`Select ${recipient.name}`}
+                  className="cursor-pointer hover:bg-gray-100 p-2 rounded-md transition duration-200"
                 >
                   {recipient.name} ({recipient.email})
                 </div>
@@ -160,37 +172,31 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
             ) : (
               <div>Aucun destinataire trouvé</div>
             )}
-            <div className="mt-4 p-4">
-              <h3 className="text-lg font-semibold">
-                Ajouter un nouveau destinataire
-              </h3>
-              <Input
-                type="text"
-                value={newRecipientName}
-                onChange={(e) => setNewRecipientName(e.target.value)}
-                placeholder="Nom du destinataire"
-                className="mt-2 p-2 border rounded-md"
-              />
-              <Input
-                type="email"
-                value={newRecipientEmail}
-                onChange={(e) => setNewRecipientEmail(e.target.value)}
-                placeholder="Email du destinataire"
-                className="mt-2 p-2 border rounded-md"
-              />
-              <div className="flex justify-end mt-4">
-                <Button onClick={() => setOpenDialog(false)} className="mr-2">
-                  Annuler
-                </Button>
-                <Button
-                  onClick={handleAddNewRecipient}
-                  className="bg-blue-500 text-white hover:bg-blue-600 transition duration-200"
-                >
-                  Ajouter
-                </Button>
-              </div>
-            </div>
+          </ScrollArea>
+          <div className="mt-4">
+            <h3 className="text-lg font-semibold mb-2">
+              Ajouter un nouveau destinataire
+            </h3>
+            <Input
+              type="text"
+              value={newRecipientName}
+              onChange={(e) => setNewRecipientName(e.target.value)}
+              placeholder="Nom du destinataire"
+              className="mb-2"
+            />
+            <Input
+              type="email"
+              value={newRecipientEmail}
+              onChange={(e) => setNewRecipientEmail(e.target.value)}
+              placeholder="Email du destinataire"
+            />
           </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenDialog(false)}>
+              Annuler
+            </Button>
+            <Button onClick={handleAddNewRecipient}>Ajouter</Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

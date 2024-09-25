@@ -1,19 +1,20 @@
-// ConfirmationDeleteGiftDialog.tsx
 import React from "react";
 import {
   Dialog,
-  DialogOverlay,
   DialogContent,
+  DialogHeader,
   DialogTitle,
-} from "@radix-ui/react-dialog";
-import { Button } from "./ui/button";
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface ConfirmationDeleteGiftDialogProps {
   open: boolean;
   onConfirm: () => void;
   onCancel: () => void;
-  giftName: string; // Added prop for the gift's name
-  recipientName: string; // Added prop for the recipient's name
+  giftName: string;
+  recipientName: string;
 }
 
 const ConfirmationDeleteGiftDialog: React.FC<
@@ -21,28 +22,29 @@ const ConfirmationDeleteGiftDialog: React.FC<
 > = ({ open, onConfirm, onCancel, giftName, recipientName }) => {
   return (
     <Dialog open={open} onOpenChange={onCancel}>
-      <DialogOverlay className="fixed inset-0 bg-black opacity-50" />
-      <DialogContent className="fixed inset-0 bg-white p-6 flex flex-col justify-center items-center">
-        <DialogTitle className="text-lg font-semibold">
-          Êtes-vous sûr de vouloir supprimer ce cadeau?
-        </DialogTitle>
-        <p className="mt-2">
-          Cadeau: <strong>{giftName}</strong>
-        </p>
-        <p>
-          Pour : <strong>{recipientName}</strong>
-        </p>
-        <div className="flex space-x-4 mt-4">
-          <Button onClick={onCancel} variant="outline">
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="p-4">Confirmer la suppression</DialogTitle>
+          <DialogDescription className="px-4">
+            Êtes-vous sûr de vouloir supprimer ce cadeau?
+          </DialogDescription>
+        </DialogHeader>
+        <div className="p-4">
+          <p>
+            Cadeau: <strong>{giftName}</strong>
+          </p>
+          <p>
+            Pour : <strong>{recipientName}</strong>
+          </p>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onCancel}>
             Annuler
           </Button>
-          <Button
-            onClick={onConfirm}
-            className="bg-red-500 text-white hover:bg-red-600 transition duration-200"
-          >
-            Confirmer
+          <Button variant="destructive" onClick={onConfirm}>
+            Supprimer
           </Button>
-        </div>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
