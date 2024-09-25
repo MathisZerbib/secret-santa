@@ -16,6 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Error marking gift as bought' });
+        } finally {
+            await prisma.$disconnect();
         }
     } else {
         res.setHeader('Allow', ['PATCH']);

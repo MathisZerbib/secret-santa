@@ -102,3 +102,22 @@ html {
 .hide-scrollbar-x {
   overflow-x: hidden !important;
 }
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.7));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.9));
+  }
+}
+
+.loader-container svg {
+  animation: glow 2s ease-in-out infinite;
+}

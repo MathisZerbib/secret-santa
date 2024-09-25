@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import MainContent from "../components/MainContent";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Gift } from "@/types/gift";
+import Loader from "@/components/ui/loader";
 
 const getGifts = async (): Promise<Gift[]> => {
   try {
@@ -19,27 +20,6 @@ const getGifts = async (): Promise<Gift[]> => {
   } catch (error) {
     console.error("Error fetching gifts:", error);
     return [];
-  }
-};
-
-const organizeSecretSanta = async (email: string, token: string) => {
-  try {
-    const response = await fetch("/api/organize-secret-santa", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, token }),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to organize Secret Santa");
-    }
-
-    // Handle successful organization
-  } catch (error) {
-    console.error("Error organizing Secret Santa:", error);
-    throw error;
   }
 };
 
@@ -114,7 +94,11 @@ export default function Home() {
   };
 
   if (isLoading) {
-    return <div className="container mx-auto mt-10">Loading...</div>;
+    return (
+      <div className="container mx-auto flex justify-center">
+        <Loader size={80} />
+      </div>
+    );
   }
 
   return (

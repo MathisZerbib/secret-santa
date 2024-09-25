@@ -120,5 +120,7 @@ Happy gifting!`,
   } catch (error) {
     console.error("Error sending email:", error);
     throw error;
+  } finally {
+    await prisma.$disconnect();
   }
 }

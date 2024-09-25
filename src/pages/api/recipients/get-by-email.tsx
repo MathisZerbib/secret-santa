@@ -25,6 +25,8 @@ export default async function handler(
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Error fetching recipient" });
+    } finally {
+      await prisma.$disconnect();
     }
   } else {
     res.setHeader("Allow", ["GET"]);

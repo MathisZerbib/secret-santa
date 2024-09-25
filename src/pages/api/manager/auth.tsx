@@ -27,5 +27,7 @@ export default async function handler(
   } catch (error) {
     console.error("Error verifying token:", error);
     return res.status(500).json({ message: "Internal server error" });
+  } finally {
+    await prisma.$disconnect();
   }
 }

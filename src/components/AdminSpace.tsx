@@ -72,7 +72,7 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
         className="flex justify-between items-center bg-white"
         variant="outline"
       >
-        Admin Space
+        Espace Admin
         <FaChevronDown
           className={`ml-2 transition-transform ${
             isDropdownOpen ? "rotate-180" : ""
@@ -88,9 +88,11 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
           >
-            <Card className="absolute top-full right-0 w-96 mt-2 shadow-lg z-10">
+            <Card className="absolute top-full right-0 w-96 mt-2 shadow-lg">
               <CardHeader>
-                <CardTitle className="text-xl font-bold">Admin Space</CardTitle>
+                <CardTitle className="text-xl font-bold">
+                  Espace Admin
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <AnimatePresence mode="wait">

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaEnvelope, FaSearch } from "react-icons/fa";
+import { FaEnvelope, FaSearch, FaTrash } from "react-icons/fa";
 import { Recipient } from "@prisma/client";
+import ConfirmationDeleteRecipientDialog from "./ConfirmationDeleteRecipientDialog"; // Import the modal
 
 interface RecipientsManagerProps {
   onAddRecipient: (recipient: Recipient) => void;
@@ -19,6 +20,11 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [recipientToDelete, setRecipientToDelete] = useState<number | null>(
+    null
+  );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(() => {
     fetchRecipients();
@@ -42,45 +48,33 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
     }
   };
 
-  const checkExistingEmail = async (email: string) => {
+  const handleDeleteRecipient = async (id: number) => {
     try {
-      const response = await fetch(
-        `/api/recipients/get-by-email?email=${encodeURIComponent(email)}`
-      );
+      const response = await fetch(`/api/recipients/${id}/delete`, {
+        method: "DELETE",
+      });
+
       if (!response.ok) {
-        throw new Error("Failed to check email");
+        throw new Error("Failed to delete recipient");
       }
-      const data = await response.json();
-      return data.exists;
-    } catch (err) {
-      console.error("Error checking email:", err);
-      throw err;
+
+      setRecipients((prevRecipients) =>
+        prevRecipients.filter((recipient) => recipient.id !== id)
+      );
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error("Error deleting recipient:", error);
     }
   };
 
-  const handleAddRecipient = async () => {
-    if (newName.trim() === "" || newEmail.trim() === "") return;
+  const handleOpenDeleteModal = (id: number) => {
+    setRecipientToDelete(id);
+    setShowDeleteModal(true);
+  };
 
-    try {
-      const emailExists = await checkExistingEmail(newEmail.trim());
-      if (emailExists) {
-        setError("This email already exists. Please use a different email.");
-        return;
-      }
-
-      const newRecipient = {
-        id: Date.now(),
-        name: newName.trim(),
-        email: newEmail.trim(),
-      };
-      onAddRecipient(newRecipient);
-      setRecipients([...recipients, newRecipient]);
-      setNewName("");
-      setNewEmail("");
-      setError(null);
-    } catch (err) {
-      console.error("Error adding recipient:", err);
-      setError("Failed to add recipient. Please try again.");
+  const handleConfirmDelete = () => {
+    if (recipientToDelete !== null) {
+      handleDeleteRecipient(recipientToDelete);
     }
   };
 
@@ -107,7 +101,7 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
           placeholder="Email"
           className="flex-grow"
         />
-        <Button onClick={handleAddRecipient} className="w-full">
+        <Button onClick={() => onAddRecipient} className="w-full">
           Ajouter un participant
         </Button>
         {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -157,11 +151,26 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
               <div className="flex items-center">
                 <FaEnvelope className="mr-2 text-gray-500" />
                 <span className="text-sm text-gray-600">{recipient.email}</span>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleOpenDeleteModal(recipient.id)} // Wrap the function call
+                  className="ml-2"
+                >
+                  <FaTrash className="text-red-500" />
+                </Button>
               </div>
             </li>
           ))}
         </ul>
       )}
+
+      {/* Confirmation Modal for deletion */}
+      <ConfirmationDeleteRecipientDialog
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </div>
   );
 };

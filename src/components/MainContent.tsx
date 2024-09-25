@@ -180,13 +180,17 @@ export default function MainContent({ initialGifts }: MainContentProps) {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="absolute top-4 right-4"
+        className="absolute top-4 right-4 z-50" // Add z-50 here
       >
         <ThemesMenu setBackgroundImage={setBackgroundImage} />
-        <AdminSpace
-          onAddRecipient={handleAddRecipient}
-          onOrganizeSecretSanta={organizeSecretSanta}
-        />
+        <div className="relative z-50">
+          {" "}
+          {/* Add this wrapper */}
+          <AdminSpace
+            onAddRecipient={handleAddRecipient}
+            onOrganizeSecretSanta={organizeSecretSanta}
+          />
+        </div>
       </motion.div>
       <br />
       <motion.div
