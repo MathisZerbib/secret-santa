@@ -59,6 +59,7 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
 
       setIsUnlocked(true);
     } catch (err) {
+      console.error("Error unlocking admin features:", err);
       setError("Invalid token. Please try again.");
     } finally {
       setIsLoading(false);
