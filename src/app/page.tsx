@@ -7,6 +7,7 @@ import MainContent from "../components/MainContent";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Gift } from "@/types/gift";
 import Loader from "@/components/ui/loader";
+import { Button } from "@/components/ui/button";
 
 const getGifts = async (): Promise<Gift[]> => {
   try {
@@ -108,7 +109,7 @@ export default function Home() {
           <MainContent initialGifts={initialGifts} />
         </>
       ) : (
-        <Card className="bg-white">
+        <Card className="bg-white w-1/2 sm:w-1/2 md:w-1/2 lg:w-1/4 mx-auto">
           <CardHeader>
             <CardTitle>Créez un manager de secret santa</CardTitle>
           </CardHeader>
@@ -122,12 +123,13 @@ export default function Home() {
                 required
                 className="w-full p-2 border rounded"
               />
-              <button
+              <Button
                 type="submit"
-                className="mt-2 p-2 bg-blue-500 text-white rounded"
+                className="mt-2 p-2 bg-black text-white w-full"
+                variant="outline"
               >
                 Créer le manager
-              </button>
+              </Button>
             </form>
           </CardContent>
         </Card>
