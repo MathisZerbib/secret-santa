@@ -16,8 +16,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Family Christmas Gift List",
-  description: "A simple app to manage your family Christmas gift list.",
+  title: "Secret Santa Company",
+  description: "Organize secret santa events for your company",
 };
 export default function RootLayout({
   children,
