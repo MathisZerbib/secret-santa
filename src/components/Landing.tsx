@@ -19,7 +19,7 @@ const Landing: React.FC = () => {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className=" bg-black text-white overflow-hidden" id="home">
       {/* ShaderGradient Background */}
       <div className="fixed inset-0 z-0">
         <ShaderGradientCanvas style={{ width: "100%", height: "100%" }}>
@@ -44,12 +44,14 @@ const Landing: React.FC = () => {
               Secret Santa Pro
             </Link>
             <div className="hidden md:flex space-x-6">
+              <a href="#home" className="hover:text-gray-300 transition">
+                Accueil
+              </a>
+
               <a href="#features" className="hover:text-gray-300 transition">
                 Fonctionnalités
               </a>
-              <a href="#cta" className="hover:text-gray-300 transition">
-                Commencer
-              </a>
+
               <Link href="/app" className="hover:text-gray-300 transition">
                 App
               </Link>
@@ -108,44 +110,6 @@ const Landing: React.FC = () => {
 
         {/* Features Section */}
         <FeatureSection />
-
-        {/* CTA Section */}
-        <motion.section
-          id="cta"
-          className="py-20 bg-zinc-800"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          viewport={{ once: true }}
-        >
-          <div className="container mx-auto px-4 text-center">
-            <motion.h2
-              className="text-4xl md:text-5xl font-bold mb-8"
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8 }}
-            >
-              Prêt à révolutionner votre Secret Santa ?
-            </motion.h2>
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="max-w-md mx-auto"
-            >
-              <Input
-                placeholder="Entrez votre email professionnel"
-                className="mb-4 w-full text-black"
-              />
-              <Button
-                size="lg"
-                className="w-full bg-blue-500 text-white hover:bg-blue-600"
-              >
-                Commencer Gratuitement
-              </Button>
-            </motion.div>
-          </div>
-        </motion.section>
 
         {/* Footer */}
         <Footer />
