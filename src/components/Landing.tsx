@@ -25,7 +25,7 @@ const Landing: React.FC = () => {
         <ShaderGradientCanvas style={{ width: "100%", height: "100%" }}>
           <ShaderGradient
             control="query"
-            urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
+            urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
           />
         </ShaderGradientCanvas>
       </div>
@@ -41,7 +41,7 @@ const Landing: React.FC = () => {
         >
           <div className="container mx-auto px-4 flex justify-between items-center">
             <Link href="/" className="text-2xl font-bold">
-              Secret Pro
+              Secret Santa Pro
             </Link>
             <div className="hidden md:flex space-x-6">
               <a href="#features" className="hover:text-gray-300 transition">
@@ -93,7 +93,7 @@ const Landing: React.FC = () => {
             >
               <Button
                 size="lg"
-                className="bg-white text-black hover:bg-gray-200"
+                className="bg-white text-orange-600 hover:bg-gray-200"
                 onClick={() =>
                   document
                     .getElementById("features")
