@@ -33,7 +33,7 @@ const FilterInput: React.FC<FilterInputProps> = ({
                 value={filter}
                 onChange={(e) => onFilterChange(e.target.value)}
                 placeholder="Filtrer par nom ou destinataire"
-                className="w-full"
+                className="w-full text-black"
               />
             </motion.div>
           )}
@@ -43,7 +43,7 @@ const FilterInput: React.FC<FilterInputProps> = ({
         variant="outline"
         size="icon"
         onClick={onToggleFilter}
-        className="ml-2 flex-shrink-0"
+        className="ml-2 flex-shrink-0 text-black"
       >
         <FaFilter />
       </Button>

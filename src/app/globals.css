@@ -14,12 +14,6 @@
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -93,10 +87,51 @@ body {
 
 body {
   @apply text-black bg-white antialiased;
+  margin: 0;
+  padding: 0;
 }
+
+
+
 
 html {
   scroll-behavior: smooth;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.scrollBody {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.min-h-screen {
+  scroll-snap-align: start; /* Ensures that sections snap at the start */
+}
+
+.snap-y {
+  overflow-y: scroll; /* Enable vertical scrolling */
+  scroll-snap-type: y mandatory; /* Enables snap type */
+}
+
+
+.scroll-container {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+section {
+  scroll-snap-align: start;
+  height: 100vh;
 }
 
 .hide-scrollbar-x {

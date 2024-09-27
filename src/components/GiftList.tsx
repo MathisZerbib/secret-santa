@@ -125,7 +125,7 @@ export default function GiftList({
                 />
               ) : (
                 <>
-                  <span className={gift.bought ? "line-through" : ""}>
+                  <span className={gift.bought ? "line-through" : "text-black"}>
                     {gift.name}
                   </span>
                   <button

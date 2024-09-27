@@ -34,19 +34,24 @@ const EditableLinkButton: React.FC<EditableLinkButtonProps> = ({
           variant="outline"
           size="sm"
           onClick={() => window.open(initialLink, "_blank")}
-          className="mr-2"
+          className="mr-2 text-black"
         >
           <FaEye />
         </Button>
       ) : null}
-      <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setIsEditing(true)}
+        className="text-black"
+      >
         <FaLink />
       </Button>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="text-black">
               {initialLink ? "Modifier le lien" : "Ajouter un lien"}
             </DialogTitle>
           </DialogHeader>
@@ -54,9 +59,14 @@ const EditableLinkButton: React.FC<EditableLinkButtonProps> = ({
             value={link}
             onChange={(e) => setLink(e.target.value)}
             placeholder="Entrez le lien de l'article"
+            className="text-black"
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsEditing(false)}
+              className="text-black"
+            >
               Annuler
             </Button>
             <Button onClick={handleSave}>Sauvegarder</Button>

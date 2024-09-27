@@ -121,8 +121,8 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
   return (
     <div className="space-y-6 mb-4 p-4 bg-gray-50 rounded-lg shadow-lg">
       {error && <div className="text-red-500 text-sm">{error}</div>}
-      <h2 className="text-xl font-semibold">Ajouter un cadeau</h2>
-      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+      <h2 className="text-xl font-semibold text-black">Ajouter un cadeau</h2>
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 text-black">
         <Input
           type="text"
           value={giftName}
@@ -154,7 +154,9 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
       <Dialog open={openDialog} onOpenChange={setOpenDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Choisir un destinataire</DialogTitle>
+            <DialogTitle className="text-black">
+              Choisir un destinataire
+            </DialogTitle>
           </DialogHeader>
           <ScrollArea className="h-[300px] pr-4">
             {loading ? (
@@ -164,7 +166,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
                 <div
                   key={recipient.email}
                   onClick={() => handleSelectRecipient(recipient)}
-                  className="cursor-pointer hover:bg-gray-100 p-2 rounded-md transition duration-200"
+                  className="cursor-pointer hover:bg-gray-100 p-2 rounded-md transition duration-200 text-black"
                 >
                   {recipient.name} ({recipient.email})
                 </div>
@@ -174,7 +176,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
             )}
           </ScrollArea>
           <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2">
+            <h3 className="text-lg font-semibold mb-2 text-black">
               Ajouter un nouveau destinataire
             </h3>
             <Input
@@ -182,17 +184,22 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
               value={newRecipientName}
               onChange={(e) => setNewRecipientName(e.target.value)}
               placeholder="Nom du destinataire"
-              className="mb-2"
+              className="mb-2 text-black"
             />
             <Input
               type="email"
               value={newRecipientEmail}
               onChange={(e) => setNewRecipientEmail(e.target.value)}
               placeholder="Email du destinataire"
+              className="text-black"
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpenDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setOpenDialog(false)}
+              className="text-black"
+            >
               Annuler
             </Button>
             <Button onClick={handleAddNewRecipient}>Ajouter</Button>

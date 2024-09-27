@@ -66,11 +66,50 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
     }
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, height: 0 },
+    visible: {
+      opacity: 1,
+      height: "auto",
+      transition: {
+        duration: 0.1,
+        ease: "easeInOut",
+        when: "beforeChildren",
+        staggerChildren: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      height: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut",
+        when: "afterChildren",
+        staggerChildren: 0.05,
+        staggerDirection: -1,
+      },
+    },
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+    exit: {
+      opacity: 0,
+      y: 20,
+      transition: { duration: 0.3, ease: "easeIn" },
+    },
+  };
+
   return (
     <div className="relative mt-2" ref={dropdownRef}>
       <Button
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-        className="flex justify-between items-center bg-white"
+        className="flex justify-between items-center bg-white text-black"
         variant="outline"
       >
         Espace Admin
@@ -84,12 +123,12 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
       <AnimatePresence>
         {isDropdownOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
-            <Card className="absolute top-full right-0 w-96 mt-2 shadow-lg">
+            <Card className="absolute top-full right-0 w-96 mt-2 shadow-lg overflow-hidden">
               <CardHeader>
                 <CardTitle className="text-xl font-bold">
                   Espace Admin
@@ -100,15 +139,14 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
                   {!isUnlocked ? (
                     <motion.div
                       key="locked"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
+                      variants={contentVariants}
                       className="space-y-4"
                     >
                       <div className="flex items-center space-x-2">
                         <FaLock className="text-gray-500" />
-                        <span>Enter token to unlock admin features</span>
+                        <span>
+                          Veuillez entrer le mot de passe pour déverrouiller
+                        </span>
                       </div>
                       <Input
                         type="password"
@@ -121,26 +159,24 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
                         className="w-full"
                         disabled={isLoading}
                       >
-                        {isLoading ? "Verifying..." : "Unlock"}
+                        {isLoading ? "Vérification..." : "Déverrouiller"}
                       </Button>
                       {error && <p className="text-red-500 text-sm">{error}</p>}
                     </motion.div>
                   ) : (
-                    <motion.div
-                      key="unlocked"
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.5, ease: "easeInOut" }}
-                    >
+                    <motion.div key="unlocked" variants={contentVariants}>
                       <div className="flex items-center space-x-2 mb-4">
                         <FaUnlock className="text-green-500" />
-                        <span>Admin features unlocked</span>
+                        <span>Espace Admin débloqué</span>
                       </div>
-                      <RecipientsManager onAddRecipient={onAddRecipient} />
-                      <SecretSantaOrganizer
-                        onOrganize={onOrganizeSecretSanta}
-                      />
+                      <motion.div variants={contentVariants}>
+                        <RecipientsManager onAddRecipient={onAddRecipient} />
+                      </motion.div>
+                      <motion.div variants={contentVariants}>
+                        <SecretSantaOrganizer
+                          onOrganize={onOrganizeSecretSanta}
+                        />
+                      </motion.div>
                     </motion.div>
                   )}
                 </AnimatePresence>

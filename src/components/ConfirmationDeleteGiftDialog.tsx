@@ -24,12 +24,14 @@ const ConfirmationDeleteGiftDialog: React.FC<
     <Dialog open={open} onOpenChange={onCancel}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="p-4">Confirmer la suppression</DialogTitle>
+          <DialogTitle className="p-4 text-black">
+            Confirmer la suppression
+          </DialogTitle>
           <DialogDescription className="px-4">
             Êtes-vous sûr de vouloir supprimer ce cadeau?
           </DialogDescription>
         </DialogHeader>
-        <div className="p-4">
+        <div className="p-4 text-black">
           <p>
             Cadeau: <strong>{giftName}</strong>
           </p>
@@ -38,7 +40,7 @@ const ConfirmationDeleteGiftDialog: React.FC<
           </p>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onCancel}>
+          <Button variant="outline" onClick={onCancel} className="text-black">
             Annuler
           </Button>
           <Button variant="destructive" onClick={onConfirm}>

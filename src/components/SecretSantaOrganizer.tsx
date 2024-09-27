@@ -52,7 +52,7 @@ const SecretSantaOrganizer: React.FC<SecretSantaOrganizerProps> = ({
             key="button"
           >
             <Button onClick={() => setShowFields(true)} className="w-full">
-              Organize Secret Santa 🎁
+              Organiser le Secret Santa
             </Button>
           </motion.div>
         ) : (
@@ -82,7 +82,9 @@ const SecretSantaOrganizer: React.FC<SecretSantaOrganizerProps> = ({
               disabled={isOrganizing}
               className="w-full"
             >
-              {isOrganizing ? "Organizing..." : "Confirm and Organize"}
+              {isOrganizing
+                ? "Envoi en cours 📩"
+                : "Envoyer la campagne de mails 🎁"}
             </Button>
             {error && <p className="text-red-500 mt-2 text-sm">{error}</p>}
           </motion.div>
