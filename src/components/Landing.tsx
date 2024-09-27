@@ -1,13 +1,14 @@
 "use client";
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Image from "next/image";
-import { FaGift, FaUserFriends, FaLock } from "react-icons/fa";
+import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
+import FeatureSection from "./FeatureSection";
+import { ShaderGradient, ShaderGradientCanvas } from "shadergradient";
 
-const Home: React.FC = () => {
+const Landing: React.FC = () => {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -17,177 +18,140 @@ const Home: React.FC = () => {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
-  const features = [
-    {
-      icon: FaGift,
-      title: "Tirage au Sort Automatique",
-      description: "Un algorithme intelligent pour un tirage équitable.",
-    },
-    {
-      icon: FaUserFriends,
-      title: "Échanges Anonymes",
-      description:
-        "Communiquez de manière anonyme avec votre Père Noël Secret.",
-    },
-    {
-      icon: FaLock,
-      title: "Sécurité & Confidentialité",
-      description:
-        "Vos données sont protégées avec un chiffrement de bout en bout.",
-    },
-  ];
-
   return (
     <div className="min-h-screen bg-black text-white overflow-hidden">
-      <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-80 py-4"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="container mx-auto px-4 flex justify-between items-center">
-          <a href="#hero" className="text-2xl font-bold">
-            Cadeau Secret Pro
-          </a>
-          <div className="space-x-6">
-            <a href="#features" className="hover:text-gray-300 transition">
-              Fonctionnalités
-            </a>
-            <a href="#cta" className="hover:text-gray-300 transition">
-              Commencer
-            </a>
-          </div>
-        </div>
-      </motion.nav>
-      {/* Hero Section */}
-      <motion.section
-        ref={targetRef}
-        className="relative h-screen flex items-center justify-center overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        <motion.div className="absolute inset-0 z-0" style={{ y, opacity }}>
-          <Image
-            src="/gift.png"
-            alt="Hero background"
-            layout="fill"
-            objectFit="cover"
-            quality={100}
+      {/* ShaderGradient Background */}
+      <div className="fixed inset-0 z-0">
+        <ShaderGradientCanvas style={{ width: "100%", height: "100%" }}>
+          <ShaderGradient
+            control="query"
+            urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=city&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
           />
-        </motion.div>
-        <div className="relative z-10 text-center">
-          <motion.h1
-            className="text-7xl font-extrabold mb-6"
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            Secret Pro
-          </motion.h1>
-          <motion.p
-            className="text-xl mb-8 max-w-2xl mx-auto"
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Simplifiez l&apos;organisation de vos événements Cadeau Secret avec
-            notre plateforme innovante.
-          </motion.p>
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-          >
-            <Button
-              size="lg"
-              className="bg-white text-black hover:bg-gray-200"
-              onClick={() => (window.location.href = "#features")}
-            >
-              Découvrir
-            </Button>
-          </motion.div>
-        </div>
-      </motion.section>
+        </ShaderGradientCanvas>
+      </div>
 
-      {/* Features Section */}
-      {features.map((feature, index) => (
+      {/* Content */}
+      <div className="relative z-10">
+        {/* Navigation Bar */}
+        <motion.nav
+          className="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-80 py-4"
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="container mx-auto px-4 flex justify-between items-center">
+            <Link href="/" className="text-2xl font-bold">
+              Secret Pro
+            </Link>
+            <div className="hidden md:flex space-x-6">
+              <a href="#features" className="hover:text-gray-300 transition">
+                Fonctionnalités
+              </a>
+              <a href="#cta" className="hover:text-gray-300 transition">
+                Commencer
+              </a>
+              <Link href="/app" className="hover:text-gray-300 transition">
+                App
+              </Link>
+            </div>
+          </div>
+        </motion.nav>
+
+        {/* Hero Section */}
         <motion.section
-          id="features"
-          key={index}
-          className="min-h-screen flex items-center justify-center bg-black"
+          ref={targetRef}
+          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        >
+          <motion.div className="absolute inset-0 z-0" style={{ y, opacity }}>
+            {/* Background image or other components */}
+          </motion.div>
+          <div className="relative z-10 text-center px-4">
+            <motion.h1
+              className="text-6xl md:text-7xl font-extrabold mb-6"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              Secret Santa Réinventé
+            </motion.h1>
+            <motion.p
+              className="text-xl mb-8 max-w-2xl mx-auto"
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+            >
+              Simplifiez l&apos;organisation de vos événements Cadeau Secret
+              avec notre plateforme innovante et sécurisée.
+            </motion.p>
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Button
+                size="lg"
+                className="bg-white text-black hover:bg-gray-200"
+                onClick={() =>
+                  document
+                    .getElementById("features")
+                    ?.scrollIntoView({ behavior: "smooth" })
+                }
+              >
+                Découvrir les Fonctionnalités
+              </Button>
+            </motion.div>
+          </div>
+        </motion.section>
+
+        {/* Features Section */}
+        <FeatureSection />
+
+        {/* CTA Section */}
+        <motion.section
+          id="cta"
+          className="py-20 bg-zinc-800"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
         >
-          <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
-            <motion.div
-              className="md:w-1/2 mb-8 md:mb-0"
-              initial={{ x: -50, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
+          <div className="container mx-auto px-4 text-center">
+            <motion.h2
+              className="text-4xl md:text-5xl font-bold mb-8"
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8 }}
             >
-              <feature.icon className="text-8xl mb-4 text-white" />
-            </motion.div>
+              Prêt à révolutionner votre Secret Santa ?
+            </motion.h2>
             <motion.div
-              className="md:w-1/2 text-left"
-              initial={{ x: 50, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
+              initial={{ y: 50, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
+              className="max-w-md mx-auto"
             >
-              <h2 className="text-4xl font-bold mb-4">{feature.title}</h2>
-              <p className="text-xl text-gray-300">{feature.description}</p>
+              <Input
+                placeholder="Entrez votre email professionnel"
+                className="mb-4 w-full text-black"
+              />
+              <Button
+                size="lg"
+                className="w-full bg-blue-500 text-white hover:bg-blue-600"
+              >
+                Commencer Gratuitement
+              </Button>
             </motion.div>
           </div>
         </motion.section>
-      ))}
 
-      {/* CTA Section */}
-      <motion.section
-        id="cta"
-        className="min-h-screen flex items-center justify-center bg-zinc-900"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        viewport={{ once: true }}
-      >
-        <div className="container mx-auto px-4 text-center flex flex-col items-center">
-          <motion.h2
-            className="text-5xl font-bold mb-8"
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            Prêt à rendre votre Cadeau Secret mémorable ?
-          </motion.h2>
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            <Input
-              placeholder="Entrez votre email professionnel"
-              className="mb-4 w-80 text-black"
-            />
-            <Button size="lg" className="bg-white text-black hover:bg-gray-200">
-              Commencer Gratuitement
-            </Button>
-          </motion.div>
-        </div>
-      </motion.section>
-
-      {/* Footer */}
-      {/* <footer className="bg-black py-8 text-center text-gray-400">
-        <p>
-          © 2024 Cadeau Secret Pro. Tous droits réservés. | Politique de
-          confidentialité | Conditions d&apos;utilisation
-        </p>
-      </footer> */}
-
-      <Footer />
+        {/* Footer */}
+        <Footer />
+      </div>
     </div>
   );
 };
 
-export default Home;
+export default Landing;

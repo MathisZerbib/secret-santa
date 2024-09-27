@@ -30,9 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-cover bg-center bg-no-repeat`}
         id="root-body"
       >
-        <div className="min-h-screen flex flex-col items-center justify-center w-full">
-          {children}
-        </div>
+        <div className="min-h-screen flex flex-col p-2 w-full">{children}</div>
         {/* <Footer /> */}
       </body>
     </html>

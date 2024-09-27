@@ -57,7 +57,7 @@ const ThemesMenu: React.FC<ThemesMenuProps> = ({ setBackgroundImage }) => {
           />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 bg-white mr-8 md:mr-16 lg:mr-20">
+      <DropdownMenuContent className="w-56 bg-white">
         <DropdownMenuLabel>Choose a Theme</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {themes.map((theme) => (
