@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 // import Footer from "@/components/Footer";
 
 // Import local fonts
@@ -30,7 +31,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} bg-cover bg-center bg-no-repeat`}
         id="root-body"
       >
-        <div className="min-h-screen flex flex-col w-full">{children}</div>
+        <div className="min-h-screen flex flex-col w-full">
+          {children}
+          <Toaster />
+        </div>
       </body>
     </html>
   );

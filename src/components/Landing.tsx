@@ -1,14 +1,30 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
 import FeatureSection from "./FeatureSection";
 import { ShaderGradient, ShaderGradientCanvas } from "shadergradient";
+import { Globals } from "@react-spring/shared";
+import CallToActionSection from "./CallToActionSection";
 
 const Landing: React.FC = () => {
+  Globals.assign({
+    frameLoop: "always",
+  });
   const targetRef = useRef(null);
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLandscape(window.innerWidth > window.innerHeight);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: targetRef,
     offset: ["start start", "end start"],
@@ -18,17 +34,21 @@ const Landing: React.FC = () => {
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   return (
-    <div className=" bg-black text-white overflow-hidden" id="home">
+    <div className="min-h-screen bg-black text-white overflow-y-auto" id="home">
       {/* ShaderGradient Background */}
       <div className="fixed inset-0 z-0">
-        <ShaderGradientCanvas style={{ width: "100%", height: "100%" }}>
+        <ShaderGradientCanvas
+          style={{
+            position: "absolute",
+            top: 0,
+          }}
+        >
           <ShaderGradient
             control="query"
             urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
           />
         </ShaderGradientCanvas>
       </div>
-
       {/* Content */}
       <div className="relative z-10">
         {/* Navigation Bar */}
@@ -46,22 +66,21 @@ const Landing: React.FC = () => {
               <a href="#home" className="hover:text-gray-300 transition">
                 Accueil
               </a>
-
               <a href="#features" className="hover:text-gray-300 transition">
                 Fonctionnalités
               </a>
-
               <Link href="/app" className="hover:text-gray-300 transition">
                 App
               </Link>
             </div>
           </div>
         </motion.nav>
-
         {/* Hero Section */}
         <motion.section
           ref={targetRef}
-          className="relative min-h-screen flex items-center justify-center overflow-hidden"
+          className={`relative ${
+            isLandscape ? "min-h-screen" : "h-screen"
+          } flex items-center justify-center overflow-hidden`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1 }}
@@ -71,7 +90,9 @@ const Landing: React.FC = () => {
           </motion.div>
           <div className="relative z-10 text-center px-4">
             <motion.h1
-              className="text-6xl md:text-7xl font-extrabold mb-6"
+              className={`${
+                isLandscape ? "text-4xl md:text-5xl" : "text-6xl md:text-7xl"
+              } font-extrabold mb-6`}
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -79,7 +100,9 @@ const Landing: React.FC = () => {
               Secret Santa Réinventé
             </motion.h1>
             <motion.p
-              className="text-xl mb-8 max-w-2xl mx-auto"
+              className={`${
+                isLandscape ? "text-lg" : "text-xl"
+              } mb-8 max-w-2xl mx-auto`}
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -93,7 +116,7 @@ const Landing: React.FC = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <Button
-                size="lg"
+                size={isLandscape ? "default" : "lg"}
                 className="bg-white text-orange-600 hover:bg-gray-200"
                 onClick={() =>
                   document
@@ -106,12 +129,12 @@ const Landing: React.FC = () => {
             </motion.div>
           </div>
         </motion.section>
-
         {/* Features Section */}
         <FeatureSection />
 
+        <CallToActionSection className="min-h-screen flex flex-col justify-center items-center py-12" />
         {/* Footer */}
-        <Footer />
+        <Footer className="py-12" />
       </div>
     </div>
   );

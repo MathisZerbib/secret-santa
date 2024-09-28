@@ -1,22 +1,42 @@
-// components/Footer.tsx
 import Image from "next/image";
 import React from "react";
 
-export default function Footer() {
+export default function Footer({ className = "" }) {
   return (
-    <footer className="bg-black py-8 px-4">
+    <footer className={`bg-black py-16 px-4 ${className}`}>
       <div className="container mx-auto flex flex-col items-center justify-center">
-        <Image
-          src="/zer_logo.webp"
-          alt="Copyright Logo"
-          width={50}
-          height={50}
-          className="mr-4 rounded-full"
-        />
-        <div className="pt-4"></div>
-        <p className="text-gray-400">
-          © 2024 Mathis Zerbib. All rights reserved.
-        </p>
+        <div className="flex flex-col items-center md:flex-row md:items-start mb-4">
+          <Image
+            src="/zer_logo.webp"
+            alt="Copyright Logo"
+            width={48}
+            height={48}
+            className="rounded-full object-cover mb-4 md:mb-0 md:mr-4"
+          />
+          <p className="text-gray-400 text-center md:text-left">
+            © 2024 Mathis Zerbib. All rights reserved.
+          </p>
+        </div>
+        <nav className="flex flex-wrap justify-center space-x-4">
+          <a
+            href="#"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Privacy Policy
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Terms of Service
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 hover:text-white transition-colors"
+          >
+            Contact
+          </a>
+        </nav>
       </div>
     </footer>
   );
