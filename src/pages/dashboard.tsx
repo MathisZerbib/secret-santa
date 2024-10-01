@@ -5,7 +5,6 @@ import { SecretSantaGroup } from "@prisma/client";
 import CreateGroupForm from "../components/CreateGroupForm";
 import { Button } from "../components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import ThemesMenu from "@/components/ThemeMenu";
 import Link from "next/link"; // Import Link component
 import { ShaderGradient, ShaderGradientCanvas } from "shadergradient";
 
