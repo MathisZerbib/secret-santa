@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
 
 interface CreateGroupFormProps {
   onSubmit: (groupName: string, email: string) => Promise<void>;
