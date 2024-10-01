@@ -8,25 +8,40 @@ datasource db {
 }
 
 model Gift {
-  id          Int       @id @default(autoincrement())
-  name        String
-  bought      Boolean   @default(false)
-  link        String?
-  recipientId Int
-  recipient   Recipient @relation(fields: [recipientId], references: [id])
+  id                 Int               @id @default(autoincrement())
+  name               String
+  bought             Boolean           @default(false)
+  link               String?
+  recipientId        Int
+  recipient          Recipient         @relation(fields: [recipientId], references: [id])
+  SecretSantaGroup   SecretSantaGroup? @relation(fields: [secretSantaGroupId], references: [id])
+  secretSantaGroupId Int?
 }
 
 model Recipient {
-  id    Int    @id @default(autoincrement())
-  name  String
-  email String @unique
-  gifts Gift[]
+  id                 Int               @id @default(autoincrement())
+  name               String
+  email              String            @unique
+  gifts              Gift[]
+  SecretSantaGroup   SecretSantaGroup? @relation(fields: [secretSantaGroupId], references: [id])
+  secretSantaGroupId Int?
 }
 
+model SecretSantaGroup {
+  id         Int         @id @default(autoincrement())
+  name       String
+  inviteCode String      @unique
+  managerId  Int
+  manager    AppManager  @relation(fields: [managerId], references: [id])
+  recipients Recipient[]
+  gifts      Gift[]
+  createdAt  DateTime    @default(now())
+}
 
 model AppManager {
-  id    Int    @id @default(autoincrement())
-  email String @unique
-  token String @unique
+  id               Int                @id @default(autoincrement())
+  email            String             @unique
+  token            String             @unique
+  hasPaid          Boolean            @default(false)
+  SecretSantaGroup SecretSantaGroup[]
 }
-

@@ -204,7 +204,13 @@ const FeatureSection = () => {
               >
                 Suivant
               </Button>
-              <Progress value={progress} className="w-1/2" />
+              <Progress
+                value={progress}
+                className="w-1/2 md:w-1/3"
+                style={{
+                  height: "0.3rem",
+                }}
+              />
             </div>
           </motion.div>
         </AnimatePresence>
