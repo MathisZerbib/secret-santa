@@ -2,6 +2,7 @@
 
 import "../app/globals.css";
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import MainContent from "../components/MainContent";
 import InviteForm from "../components/InviteForm";
 import CreateGroupForm from "../components/CreateGroupForm";
@@ -16,11 +17,12 @@ import Loader from "@/components/ui/loader";
 import { Button } from "@/components/ui/button";
 import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
 
-const getGifts = async (): Promise<Gift[]> => {
+const getGifts = async (groupId?: string): Promise<Gift[]> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get`
-    );
+    const url = groupId
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${groupId}`
+      : `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get`;
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Failed to fetch gifts");
     }
@@ -36,6 +38,7 @@ const getGifts = async (): Promise<Gift[]> => {
 };
 
 export default function App() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
   const [view, setView] = useState<"join" | "create" | "main">("join");
@@ -43,6 +46,7 @@ export default function App() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
+  const [showGradient, setShowGradient] = useState(true);
 
   useEffect(() => {
     const checkUserStatus = async () => {
@@ -52,6 +56,7 @@ export default function App() {
         );
         if (response.ok) {
           const data = await response.json();
+          console.log("User status:", data);
           const giftsData = await getGifts();
           setInitialGifts(giftsData);
         }
@@ -83,9 +88,14 @@ export default function App() {
       }
 
       setIsValidInviteCode(true);
-      const giftsData = await getGifts();
+      const giftsData = await getGifts(inviteCode);
       setInitialGifts(giftsData);
       setSuccessMessage("Valid invite code. You can now view the gifts.");
+      setShowGradient(false);
+
+      // Redirect to the group page
+      router.push(`/group/${inviteCode}`);
+
       return true;
     } catch (error) {
       setErrorMessage(
@@ -120,6 +130,10 @@ export default function App() {
         setInviteCode(result.inviteCode);
         setSuccessMessage("Secret Santa group created successfully!");
         setView("main");
+        setShowGradient(false);
+
+        // Redirect to the group page
+        router.push(`/group/${result.inviteCode}`);
       }
     } catch (err) {
       console.error(err);
@@ -143,7 +157,9 @@ export default function App() {
     <div className="relative min-h-screen overflow-hidden">
       {/* Shader background */}
       <div className="absolute inset-0 z-0">
-        <ShaderGradientCanvas>
+        <ShaderGradientCanvas
+          className={showGradient ? "opacity-100" : "opacity-0"}
+        >
           <ShaderGradient
             control="query"
             urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
@@ -153,12 +169,10 @@ export default function App() {
 
       {/* Main content */}
       <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
-        <div className="container mx-auto max-w-md">
+        <div className="mx-auto max-w-md w-full">
           <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">
             {isValidInviteCode ? (
-              <div className="p-6">
-                <MainContent initialGifts={initialGifts} />
-              </div>
+              <MainContent initialGifts={initialGifts} />
             ) : (
               <Card className="bg-transparent border-none">
                 <CardHeader>
@@ -183,7 +197,9 @@ export default function App() {
                   {successMessage && (
                     <div className="mt-4 p-2 bg-green-100 text-green-800 rounded">
                       {successMessage}
-                      {inviteCode && <p>Code d'invitation: {inviteCode}</p>}
+                      {inviteCode && (
+                        <p>Code d&apos;invitation: {inviteCode}</p>
+                      )}
                     </div>
                   )}
                   {errorMessage && (

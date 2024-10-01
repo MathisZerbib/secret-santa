@@ -33,7 +33,11 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSubmit }) => {
           Rejoindre
         </Button>
       </form>
-      <p className="text-center text-white mt-4">Or</p>
+      <div className="flex items-center justify-center space-x-2">
+        <div className="flex-grow border-t border-white opacity-50"></div>
+        <span className="text-white opacity-75">ou</span>
+        <div className="flex-grow border-t border-white opacity-50"></div>
+      </div>
     </div>
   );
 };

@@ -1,13 +1,12 @@
-
-// gift .ts types
-
-import { Recipient } from "./recipient";
-
+import { SecretSantaGroup, Recipient } from "@prisma/client";
 
 export type Gift = {
     id: number;
     name: string;
-    recipient: Recipient;
     bought: boolean;
-    link: string | undefined;
+    link?: string;
+    recipientId: number;
+    recipient: Recipient;
+    secretSantaGroupId?: number;
+    SecretSantaGroup?: SecretSantaGroup;
 };

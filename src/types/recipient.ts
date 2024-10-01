@@ -1,8 +1,5 @@
-import { Gift } from "./gift";
+import { Gift, Recipient as PrismaRecipient } from "@prisma/client";
 
-export type Recipient = {
-    id: number;
-    name: string;
-    email: string;
+export type Recipient = PrismaRecipient & {
     gifts: Gift[];
 };

@@ -174,7 +174,6 @@ export default function MainContent({ initialGifts }: MainContentProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="container mx-auto p-6"
     >
       <motion.div
         initial={{ y: -20, opacity: 0 }}
@@ -197,7 +196,7 @@ export default function MainContent({ initialGifts }: MainContentProps) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.5 }}
-        className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mt-16 sm:mt-8"
+        className="max-w-2xl mx-auto p-6 rounded-lg shadow-md mt-16 sm:mt-8"
       >
         <GiftForm onAddGift={addGift} />
         <FilterInput
@@ -215,7 +214,7 @@ export default function MainContent({ initialGifts }: MainContentProps) {
             onDeleteGift={deleteGift}
           />
         ) : (
-          <p>No gifts found.</p>
+          <p> Commencez à ajouter des cadeaux !</p>
         )}
       </motion.div>
     </motion.div>

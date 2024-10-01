@@ -34,7 +34,7 @@ const EditableLinkButton: React.FC<EditableLinkButtonProps> = ({
           variant="outline"
           size="sm"
           onClick={() => window.open(initialLink, "_blank")}
-          className="mr-2 text-black"
+          className="mr-2 text-white"
         >
           <FaEye />
         </Button>
@@ -43,7 +43,7 @@ const EditableLinkButton: React.FC<EditableLinkButtonProps> = ({
         variant="outline"
         size="sm"
         onClick={() => setIsEditing(true)}
-        className="text-black"
+        className="text-white"
       >
         <FaLink />
       </Button>

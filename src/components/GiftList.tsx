@@ -110,7 +110,7 @@ export default function GiftList({
           <li
             key={gift.id}
             className={`flex justify-between items-center p-3 rounded ${
-              gift.bought ? "bg-gray-100 text-gray-500" : "bg-white"
+              gift.bought ? "bg-gray-100 text-gray-500" : "bg-transparent"
             }`}
           >
             <div className="flex-grow flex items-center">
@@ -125,18 +125,18 @@ export default function GiftList({
                 />
               ) : (
                 <>
-                  <span className={gift.bought ? "line-through" : "text-black"}>
+                  <span className={gift.bought ? "line-through" : "text-white"}>
                     {gift.name}
                   </span>
                   <button
                     onClick={() => handleEditClick(gift)}
-                    className="ml-2 p-1 text-gray-500 hover:text-gray-700"
+                    className="ml-2 p-1 text-white hover:text-gray-400"
                   >
                     <FaPencilAlt size={14} />
                   </button>
                 </>
               )}
-              <span className="ml-2 text-sm text-gray-600">
+              <span className="ml-2 text-sm text-gray-400">
                 (Pour : {gift.recipient && gift.recipient.name})
               </span>
             </div>

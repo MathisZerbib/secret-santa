@@ -119,15 +119,16 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
   };
 
   return (
-    <div className="space-y-6 mb-4 p-4 bg-gray-50 rounded-lg shadow-lg">
+    <div className="space-y-6 mb-4 p-4 rounded-lg shadow-lg">
       {error && <div className="text-red-500 text-sm">{error}</div>}
-      <h2 className="text-xl font-semibold text-black">Ajouter un cadeau</h2>
-      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 text-black">
+      <h2 className="text-xl font-semibold text-white">Ajouter un cadeau</h2>
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 text-white">
         <Input
           type="text"
           value={giftName}
           onChange={(e) => setGiftName(e.target.value)}
           placeholder="Nom du cadeau"
+          className="placeholder:text-white"
         />
 
         <Button
@@ -144,6 +145,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
           value={giftLink}
           onChange={(e) => setGiftLink(e.target.value)}
           placeholder="Lien vers l'article (optionnel)"
+          className="placeholder:text-white"
         />
       </div>
 
@@ -151,8 +153,8 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
         Ajouter à la liste
       </Button>
 
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent className="sm:max-w-[425px]">
+      <Dialog open={openDialog} onOpenChange={setOpenDialog} modal={false}>
+        <DialogContent className="sm:max-w-[425px] backdrop-blur-md bg-white">
           <DialogHeader>
             <DialogTitle className="text-black">
               Choisir un destinataire
@@ -160,7 +162,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
           </DialogHeader>
           <ScrollArea className="h-[300px] pr-4">
             {loading ? (
-              <div className="text-center">Chargement...</div>
+              <div className="text-center text-black">Chargement...</div>
             ) : recipients.length > 0 ? (
               recipients.map((recipient) => (
                 <div
@@ -176,7 +178,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
             )}
           </ScrollArea>
           <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2 text-black">
+            <h3 className="text-lg font-semibold mb-2 text-white">
               Ajouter un nouveau destinataire
             </h3>
             <Input
@@ -184,14 +186,14 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
               value={newRecipientName}
               onChange={(e) => setNewRecipientName(e.target.value)}
               placeholder="Nom du destinataire"
-              className="mb-2 text-black"
+              className="mb-2 text-white"
             />
             <Input
               type="email"
               value={newRecipientEmail}
               onChange={(e) => setNewRecipientEmail(e.target.value)}
               placeholder="Email du destinataire"
-              className="text-black"
+              className="text-white"
             />
           </div>
           <DialogFooter>

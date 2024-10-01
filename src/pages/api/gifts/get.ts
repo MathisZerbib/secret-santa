@@ -2,10 +2,20 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'GET') {
+        const { groupId } = req.query;
+
+        if (!groupId) {
+            return res.status(400).json({ error: 'Group ID is required' });
+        }
+
         try {
             const gifts = await prisma.gift.findMany({
+                where: {
+                    secretSantaGroupId: Number(groupId)
+                },
                 include: {
                     recipient: { // Include recipient details
                         select: {
