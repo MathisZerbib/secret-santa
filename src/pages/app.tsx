@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import MainContent from "../components/MainContent";
 import InviteForm from "../components/InviteForm";
-import CreateGroupForm from "../components/CreateGroupForm";
+// import CreateGroupForm from "../components/CreateGroupForm";
 import { Gift } from "../types/gift";
 import {
   Card,
@@ -14,7 +14,7 @@ import {
   CardContent,
 } from "../components/ui/card";
 import Loader from "@/components/ui/loader";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
 import Provider from "@/components/provider";
 import LoginBtn from "@/components/login-btn";

@@ -14,7 +14,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 		return res.status(401).json({
 			error: {
 				code: "no-access",
-				message: "You are not signed in.",
+				message: "Vous n'êtes pas connecté.",
 			},
 		});
 	}
@@ -30,11 +30,11 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
 		);
 
 		return res.status(200).json({ subscription });
-	} catch (error) {
+	} catch {
 		return res.status(500).json({
 			error: {
 				code: "stripe-error",
-				message: "Could not cancel subscription",
+				message: "Impossible d'annuler l'abonnement",
 			},
 		});
 	}
@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		return res.status(405).json({
 			error: {
 				code: "method-not-allowed",
-				message: "Method not allowed",
+				message: "Méthode non autorisée",
 			},
 		});
 	}
