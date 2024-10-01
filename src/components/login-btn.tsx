@@ -19,7 +19,7 @@ export default function LoginBtn() {
       }
       return router.push("/dashboard");
     }
-  }, [status, session]);
+  }, [status, session, router]);
 
   if (status === "loading") {
     return <p>Loading...</p>;

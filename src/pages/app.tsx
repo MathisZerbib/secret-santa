@@ -108,43 +108,43 @@ export default function App() {
     }
   };
 
-  const handleCreateGroup = async (groupName: string, email: string) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/group/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: groupName,
-          managerEmail: email,
-        }),
-      });
+  // const handleCreateGroup = async (groupName: string, email: string) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch("/api/group/create", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         name: groupName,
+  //         managerEmail: email,
+  //       }),
+  //     });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to create group");
-      }
+  //     if (!response.ok) {
+  //       const errorData = await response.json();
+  //       throw new Error(errorData.error || "Failed to create group");
+  //     }
 
-      const result = await response.json();
+  //     const result = await response.json();
 
-      if (result.groupId) {
-        setInviteCode(result.inviteCode);
-        setSuccessMessage("Secret Santa group created successfully!");
-        setView("main");
-        setShowGradient(false);
+  //     if (result.groupId) {
+  //       setInviteCode(result.inviteCode);
+  //       setSuccessMessage("Secret Santa group created successfully!");
+  //       setView("main");
+  //       setShowGradient(false);
 
-        // Redirect to the group page
-        router.push(`/group/${result.groupId}`);
-      }
-    } catch (err) {
-      console.error(err);
-      setErrorMessage(
-        err instanceof Error ? err.message : "An unexpected error occurred"
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //       // Redirect to the group page
+  //       router.push(`/group/${result.groupId}`);
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     setErrorMessage(
+  //       err instanceof Error ? err.message : "An unexpected error occurred"
+  //     );
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   if (isLoading) {
     return (

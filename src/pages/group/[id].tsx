@@ -63,7 +63,7 @@ const GroupPage = () => {
       };
       fetchGroupAndGifts();
     }
-  }, [id]);
+  }, [id, router]);
 
   if (isLoading) {
     return (

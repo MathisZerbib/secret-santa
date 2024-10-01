@@ -16,12 +16,12 @@ export const authOptions: NextAuthOptions = {
 	],
 	secret: process.env.NEXTAUTH_SECRET,
 	callbacks: {
-		async session({ session, token, user }) {
+		async session({ session, user }) {
 			session!.user!.id = user.id;
 			session!.user!.stripeCustomerId = user.stripeCustomerId;
 			session!.user!.isActive = user.isActive;
 			session!.user!.subscriptionID = user.subscriptionID;
-			session.user.stripeCustomerId = user.stripeCustomerId;
+			session.user!.stripeCustomerId = user.stripeCustomerId;
 			return session;
 		},
 	},
