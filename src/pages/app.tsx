@@ -42,15 +42,13 @@ export default function App() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
-  const [view, setView] = useState<"join" | "create" | "main">("join");
-  const [inviteCode, setInviteCode] = useState("");
+  const [view] = useState<"join" | "create" | "main">("join");
+  const [inviteCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
   const [showGradient, setShowGradient] = useState(true);
 
-  setInviteCode("");
-  setView("join");
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
@@ -110,44 +108,6 @@ export default function App() {
     }
   };
 
-  // const handleCreateGroup = async (groupName: string, email: string) => {
-  //   setIsLoading(true);
-  //   try {
-  //     const response = await fetch("/api/group/create", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         name: groupName,
-  //         managerEmail: email,
-  //       }),
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.error || "Failed to create group");
-  //     }
-
-  //     const result = await response.json();
-
-  //     if (result.groupId) {
-  //       setInviteCode(result.inviteCode);
-  //       setSuccessMessage("Secret Santa group created successfully!");
-  //       setView("main");
-  //       setShowGradient(false);
-
-  //       // Redirect to the group page
-  //       router.push(`/group/${result.groupId}`);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     setErrorMessage(
-  //       err instanceof Error ? err.message : "An unexpected error occurred"
-  //     );
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
-
   if (isLoading) {
     return (
       <div className="container mx-auto flex justify-center items-center min-h-screen">
@@ -191,15 +151,8 @@ export default function App() {
                         <div className="flex justify-center">
                           <LoginBtn />
                         </div>
-                        {/* <Button
-                          onClick={() => setView("create")}
-                          className="w-full mt-4 bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-all duration-300"
-                        >
-                          Créer un groupe
-                        </Button> */}
                       </>
                     ) : (
-                      // <CreateGroupForm onSubmit={handleCreateGroup} />
                       <></>
                     )}
                     {successMessage && (
