@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const { name, managerEmail } = req.body;
-
+    console.log("Creating group with name:", name, "and manager email:", managerEmail);
     // Validate input
     if (!name || !managerEmail) {
       return res

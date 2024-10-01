@@ -8,8 +8,10 @@ export default function SubscriptionPage() {
 
   return (
     <div className="m-auto w-fit flex flex-col justify-center">
-      <h1 className="text-2xl my-6">Signed in as {session?.user?.name}</h1>
-      <div className="grid lg:grid-cols-3 gap-2">
+      <h1 className="text-2xl my-6">
+        Connecté en tant que {session?.user?.name}
+      </h1>
+      <div className="grid lg:grid-cols-3 gap-10">
         {subscription.map((sub, i) => (
           <SubscriptionCard
             key={i}
@@ -23,7 +25,7 @@ export default function SubscriptionPage() {
         className="p-2 text-white border mt-4"
         onClick={() => signOut({ callbackUrl: "/app" })}
       >
-        Sign Out
+        Se déconnecter
       </button>
     </div>
   );

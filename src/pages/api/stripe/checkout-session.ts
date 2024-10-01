@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { authOptions } from "../auth/[...nextauth]";
 import Stripe from "stripe";
+import prisma from "../../../../prisma/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	apiVersion: "2024-06-20",
@@ -56,6 +57,13 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 				},
 			});
 		}
+
+		await prisma.user.update({
+			where: { id: session.user.id },
+			data: {
+				isActive: true,
+			},
+		});
 
 		return res.status(200).json({ session: checkoutSession });
 	} catch (error) {

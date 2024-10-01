@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Footer({ className = "" }) {
   return (
-    <footer className={`bg-black py-16 px-4 ${className}`}>
+    <footer className={`bg-black py-8 px-4 ${className}`}>
       <div className="container mx-auto flex flex-col items-center justify-center">
         <div className="flex flex-col items-center md:flex-row md:items-start mb-4">
           <Image
@@ -31,7 +31,7 @@ export default function Footer({ className = "" }) {
             Terms of Service
           </a>
           <a
-            href="#"
+            href={`mailto:${process.env.SENDGRID_FROM_EMAIL}`}
             className="text-gray-400 hover:text-white transition-colors"
           >
             Contact

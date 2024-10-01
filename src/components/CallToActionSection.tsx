@@ -1,11 +1,10 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Input } from "@/components/ui/input";
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "./ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Turnstile } from "@marsidev/react-turnstile";
 
-const verbs = ["révolutionner", "transformer", "améliorer", "dynamiser"];
+const verbs = ["améliorer", "organiser", "réaliser", "optimiser", "planifier"];
 
 export default function CallToActionSection({ className = "" }) {
   const [currentVerbIndex, setCurrentVerbIndex] = useState(0);
@@ -13,6 +12,7 @@ export default function CallToActionSection({ className = "" }) {
   const [isLoading, setIsLoading] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const verbRef = useRef<HTMLDivElement>(null);
+  const longestVerb = verbs.reduce((a, b) => (a.length > b.length ? a : b));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -24,12 +24,9 @@ export default function CallToActionSection({ className = "" }) {
 
   useEffect(() => {
     if (verbRef.current) {
-      const longestVerbWidth = Math.max(
-        ...verbs.map(() => verbRef.current?.offsetWidth || 0)
-      );
-      verbRef.current.style.width = `${longestVerbWidth}px`;
+      verbRef.current.style.width = `${longestVerb.length}ch`;
     }
-  }, [currentVerbIndex]);
+  }, [longestVerb.length]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,6 +102,7 @@ export default function CallToActionSection({ className = "" }) {
               style={{
                 display: "inline-block",
                 whiteSpace: "nowrap",
+                width: `${longestVerb.length}ch`,
               }}
             >
               {verbs[currentVerbIndex]}
@@ -113,10 +111,10 @@ export default function CallToActionSection({ className = "" }) {
           votre Secret Santa ?
         </h2>
         <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-          <Input
+          <input
             type="email"
             placeholder="Entrez votre email professionnel"
-            className="mb-4 md:mb-6 w-full text-white bg-white bg-opacity-10 border-gray-700 placeholder:text-white focus:border-white focus:ring focus:ring-white border-opacity-100"
+            className="p-2 mb-4 md:mb-6 w-full text-white bg-white bg-opacity-10 border-none rounded-lg backdrop-blur-md placeholder:text-white focus:border-none focus:ring-0 focus:outline-none"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

@@ -8,7 +8,7 @@ import { Gift } from "../../types/gift";
 const checkGroupExists = async (groupId: string): Promise<boolean> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}`
+      `${process.env.NEXT_PUBLIC_API_URL}/api/group/get?groupId=${groupId}`
     );
 
     if (!response.ok) {
@@ -53,7 +53,8 @@ const GroupPage = () => {
       const fetchGroupAndGifts = async () => {
         const groupExists = await checkGroupExists(id as string);
         if (!groupExists) {
-          router.push("/app");
+          // router.push("/app");
+          console.error("Group does not exist");
           return;
         }
 

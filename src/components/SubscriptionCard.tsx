@@ -20,13 +20,13 @@ export const SubscriptionCard = ({
       });
 
       if (!res.ok) {
-        throw new Error("Failed to create checkout session");
+        throw new Error("Échec de la création de la session de paiement");
       }
 
       const { session: checkoutSession } = await res.json();
 
       if (!checkoutSession || !checkoutSession.id) {
-        throw new Error("Invalid checkout session");
+        throw new Error("Session de paiement invalide");
       }
 
       const stripe = await getStripe();
@@ -35,28 +35,65 @@ export const SubscriptionCard = ({
       });
 
       if (error) {
-        console.error("Stripe checkout error:", error);
+        console.error("Erreur de paiement Stripe :", error);
       }
     } catch (error) {
-      console.error("Error creating checkout session:", error);
+      console.error(
+        "Erreur lors de la création de la session de paiement :",
+        error
+      );
     }
   };
+
+  const getFeatures = (planType: string) => {
+    switch (planType) {
+      case "Basic":
+        return [
+          "Organiser jusqu'à 1 événement Secret Santa",
+          "Envoyer des messages anonymes",
+          "Gérer jusqu'à 10 participants",
+          "Définir des budgets cadeaux",
+        ];
+      case "Standard":
+        return [
+          "Organiser jusqu'à 5 événements Secret Santa",
+          "Envoyer des messages anonymes",
+          "Gérer jusqu'à 50 participants",
+          "Définir des budgets cadeaux",
+          "Tirage au sort automatique des paires Secret Santa",
+        ];
+      case "Premium":
+        return [
+          "Événements Secret Santa illimités",
+          "Envoyer des messages anonymes",
+          "Gérer un nombre illimité de participants",
+          "Définir des budgets cadeaux",
+          "Tirage au sort automatique des paires Secret Santa",
+          "Support prioritaire",
+        ];
+      default:
+        return [];
+    }
+  };
+
+  const features = getFeatures(planType);
 
   return (
     <div
       onClick={() => handleCreateCheckoutSession(priceId)}
-      className="p-10 border-2 hover:cursor-pointer hover:bg-gray-700 hover:scale-105 duration-300 transition-all w-full max-w-[21rem] min-h-[22rem] bg-black"
+      className="p-4 md:p-6 lg:p-8 border-2 border-white border-opacity-20 rounded-lg backdrop-blur-md bg-white bg-opacity-10 hover:cursor-pointer hover:bg-opacity-20 hover:scale-105 duration-300 transition-all w-full max-w-[20rem] min-h-[20rem] mx-auto mb-8"
     >
-      <div className="font-bold text-3xl mb-2 capitalize">{planType}</div>
-      <div className="flex items-baseline mb-2">
-        <div className="text-3xl mr-2">{price}</div> / Month
+      <div className="font-bold text-2xl md:text-3xl mb-2 capitalize text-white">
+        {planType}
       </div>
-      <ul className="list-disc pl-4">
-        <li>Appointment scheduling</li>
-        <li>Patient notification</li>
-        <li>Create up to one office</li>
-        <li>Description ...</li>
-        <li>Description ....</li>
+      <div className="flex items-baseline mb-2">
+        <div className="text-2xl md:text-3xl mr-2 text-white">{price}</div>
+        <span className="text-lg md:text-xl text-white">/ Mois</span>
+      </div>
+      <ul className="list-disc pl-4 text-white space-y-1">
+        {features.map((feature, index) => (
+          <li key={index}>{feature}</li>
+        ))}
       </ul>
     </div>
   );
