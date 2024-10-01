@@ -49,6 +49,8 @@ export default function App() {
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
   const [showGradient, setShowGradient] = useState(true);
 
+  setInviteCode("");
+  setView("join");
   useEffect(() => {
     const checkUserStatus = async () => {
       try {
