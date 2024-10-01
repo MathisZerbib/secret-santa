@@ -2,8 +2,15 @@
 
 "use client";
 
+import Provider from "@/components/provider";
 import Landing from "../components/Landing";
 
 export default function Home() {
-  return <Landing />;
+  return (
+    <>
+      <Provider>
+        <Landing />
+      </Provider>
+    </>
+  );
 }

@@ -26,16 +26,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="bg-gray-50 text-gray-900">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-cover bg-center bg-no-repeat`}
-        id="root-body"
-      >
-        <div className="min-h-screen flex flex-col w-full">
-          {children}
-          <Toaster />
-        </div>
-      </body>
-    </html>
+      <html lang="en" className="bg-gray-50 text-gray-900">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} bg-cover bg-center bg-no-repeat`}
+          id="root-body"
+        >
+          <div className="min-h-screen flex flex-col w-full">
+            {children}
+            <Toaster />
+          </div>
+        </body>
+      </html>
   );
 }

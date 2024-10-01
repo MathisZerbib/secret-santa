@@ -16,12 +16,13 @@ import {
 import Loader from "@/components/ui/loader";
 import { Button } from "@/components/ui/button";
 import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
+import Provider from "@/components/provider";
+import LoginBtn from "@/components/login-btn";
 
 const getGifts = async (groupId?: string): Promise<Gift[]> => {
   try {
-    const url = groupId
-      ? `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${groupId}`
-      : `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${groupId}`;
+
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error("Failed to fetch gifts");
@@ -29,7 +30,7 @@ const getGifts = async (groupId?: string): Promise<Gift[]> => {
     const gifts = await response.json();
     return gifts.map((gift: Gift) => ({
       ...gift,
-      recipient: gift.recipient || { id: 0, name: "Unknown" },
+      recipient: gift.recipient,
     }));
   } catch (error) {
     console.error("Error fetching gifts:", error);
@@ -84,7 +85,7 @@ export default function App() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Invalid invite code");
+        throw new Error(errorData.error || "Code d'invitation invalide");
       }
 
       setIsValidInviteCode(true);
@@ -126,14 +127,14 @@ export default function App() {
 
       const result = await response.json();
 
-      if (result.inviteCode) {
+      if (result.groupId) {
         setInviteCode(result.inviteCode);
         setSuccessMessage("Secret Santa group created successfully!");
         setView("main");
         setShowGradient(false);
 
         // Redirect to the group page
-        router.push(`/group/${result.inviteCode}`);
+        router.push(`/group/${result.groupId}`);
       }
     } catch (err) {
       console.error(err);
@@ -154,65 +155,71 @@ export default function App() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Shader background */}
-      <div className="absolute inset-0 z-0">
-        <ShaderGradientCanvas
-          className={showGradient ? "opacity-100" : "opacity-0"}
-        >
-          <ShaderGradient
-            control="query"
-            urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
-          />
-        </ShaderGradientCanvas>
-      </div>
+    <Provider>
+      <div className="relative min-h-screen overflow-hidden">
+        {/* Shader background */}
+        <div className="absolute inset-0 z-0">
+          <ShaderGradientCanvas
+            className={showGradient ? "opacity-100" : "opacity-0"}
+          >
+            <ShaderGradient
+              control="query"
+              urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
+            />
+          </ShaderGradientCanvas>
+        </div>
 
-      {/* Main content */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
-        <div className="mx-auto max-w-md w-full">
-          <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">
-            {isValidInviteCode ? (
-              <MainContent initialGifts={initialGifts} />
-            ) : (
-              <Card className="bg-transparent border-none">
-                <CardHeader>
-                  <CardTitle className="text-white text-2xl font-bold text-center">
-                    Secret Santa
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {view === "join" ? (
-                    <>
-                      <InviteForm onSubmit={handleInviteSubmit} />
-                      <Button
-                        onClick={() => setView("create")}
-                        className="w-full mt-4 bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-all duration-300"
-                      >
-                        Créer un groupe
-                      </Button>
-                    </>
-                  ) : (
-                    <CreateGroupForm onSubmit={handleCreateGroup} />
-                  )}
-                  {successMessage && (
-                    <div className="mt-4 p-2 bg-green-100 text-green-800 rounded">
-                      {successMessage}
-                      {inviteCode && (
-                        <p>Code d&apos;invitation: {inviteCode}</p>
-                      )}
-                    </div>
-                  )}
-                  {errorMessage && (
-                    <div className="mt-4 p-2 bg-red-100 text-red-800 rounded">
-                      {errorMessage}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            )}
+        {/* Main content */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
+          <div className="mx-auto max-w-md w-full">
+            <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">
+              {isValidInviteCode ? (
+                <MainContent initialGifts={initialGifts} />
+              ) : (
+                <Card className="bg-transparent border-none">
+                  <CardHeader>
+                    <CardTitle className="text-white text-2xl font-bold text-center">
+                      Secret Santa
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {view === "join" ? (
+                      <>
+                        <InviteForm onSubmit={handleInviteSubmit} />
+                        <div className="flex justify-center">
+                          <LoginBtn />
+                        </div>
+                        {/* <Button
+                          onClick={() => setView("create")}
+                          className="w-full mt-4 bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-all duration-300"
+                        >
+                          Créer un groupe
+                        </Button> */}
+                      </>
+                    ) : (
+                      // <CreateGroupForm onSubmit={handleCreateGroup} />
+                      <></>
+                    )}
+                    {successMessage && (
+                      <div className="mt-4 p-2 bg-green-100 text-green-800 rounded">
+                        {successMessage}
+                        {inviteCode && (
+                          <p>Code d&apos;invitation: {inviteCode}</p>
+                        )}
+                      </div>
+                    )}
+                    {errorMessage && (
+                      <div className="mt-4 p-2 bg-red-100 text-red-800 rounded">
+                        {errorMessage}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Provider>
   );
 }

@@ -1,11 +1,27 @@
-// pages/group/[id].tsx
-
 import "../../app/globals.css";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import MainContent from "../../components/MainContent";
 import Loader from "../../components/ui/loader";
 import { Gift } from "../../types/gift";
+
+const checkGroupExists = async (groupId: string): Promise<boolean> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/group/${groupId}`
+    );
+
+    if (!response.ok) {
+      return false;
+    }
+
+    const group = await response.json();
+    return !!group;
+  } catch (error) {
+    console.error("Error checking group existence:", error);
+    return false;
+  }
+};
 
 const getGiftsByGroupId = async (groupId: string): Promise<Gift[]> => {
   try {
@@ -34,12 +50,18 @@ const GroupPage = () => {
 
   useEffect(() => {
     if (id) {
-      const fetchGifts = async () => {
+      const fetchGroupAndGifts = async () => {
+        const groupExists = await checkGroupExists(id as string);
+        if (!groupExists) {
+          router.push("/app");
+          return;
+        }
+
         const giftsData = await getGiftsByGroupId(id as string);
         setGifts(giftsData);
         setIsLoading(false);
       };
-      fetchGifts();
+      fetchGroupAndGifts();
     }
   }, [id]);
 

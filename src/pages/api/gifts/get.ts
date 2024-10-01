@@ -12,6 +12,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
+            // Check if the group exists
+            const group = await prisma.secretSantaGroup.findUnique({
+                where: {
+                    id: Number(groupId)
+                }
+            });
+
+            if (!group) {
+                return res.status(404).json({ error: 'Group not found' });
+            }
+
+            // Fetch gifts if the group exists
             const gifts = await prisma.gift.findMany({
                 where: {
                     secretSantaGroupId: Number(groupId)
@@ -26,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 }
             });
+
             res.status(200).json(gifts);
         } catch (error) {
             console.error(error);

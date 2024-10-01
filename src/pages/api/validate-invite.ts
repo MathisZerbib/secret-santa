@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       if (!group) {
-        return res.status(404).json({ error: "Invalid invite code" });
+        return res.status(404).json({ error: "Group not found" });
       }
 
       return res.status(200).json({ success: true });

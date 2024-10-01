@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { nanoid } from "nanoid";
 import { PrismaClient } from "@prisma/client";
+import sgMail from '@sendgrid/mail';
 
 const prisma = new PrismaClient();
+sgMail.setApiKey(process.env.SENDGRID_API_KEY as string);
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,6 +26,7 @@ export default async function handler(
         where: { email: managerEmail },
       });
 
+
       if (!manager) {
         // Create a new manager if they don't exist
         manager = await prisma.appManager.create({
@@ -34,13 +37,6 @@ export default async function handler(
           },
         });
       }
-
-      // Check if the manager has paid
-      // if (!manager.hasPaid) {
-      //   return res
-      //     .status(403)
-      //     .json({ error: "Payment required to create a group" });
-      // }
 
       // Generate a unique invite code
       const inviteCode = nanoid(8);
@@ -53,6 +49,20 @@ export default async function handler(
           managerId: manager.id,
         },
       });
+
+      // Send email with invite code
+      const msg = {
+        to: managerEmail,
+        from: {
+          email: process.env.SENDGRID_FROM_EMAIL as string,
+          name: process.env.SENDGRID_FROM_NAME as string,
+        },
+        subject: 'Your Secret Santa Group Invite Code',
+        text: `Your invite code for the Secret Santa group "${name}" is: ${inviteCode}`,
+        html: `<strong>Your invite code for the Secret Santa group "${name}" is: ${inviteCode}</strong>`,
+      };
+
+      await sgMail.send(msg);
 
       return res.status(200).json({ inviteCode, groupId: group.id });
     } catch (error) {
