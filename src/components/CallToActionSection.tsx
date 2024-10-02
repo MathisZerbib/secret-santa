@@ -81,7 +81,7 @@ export default function CallToActionSection({ className = "" }) {
   };
 
   return (
-    <div className={className}>
+    <div className={className} id="newsletter">
       <motion.div
         className="text-center"
         initial={{ opacity: 0, y: 50 }}

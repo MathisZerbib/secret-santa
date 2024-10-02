@@ -1,13 +1,13 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Footer from "@/components/Footer";
 import FeatureSection from "./FeatureSection";
 import { ShaderGradient, ShaderGradientCanvas } from "shadergradient";
 import { Globals } from "@react-spring/shared";
 import CallToActionSection from "./CallToActionSection";
+import Header from "./Header"; // Import the new Header component
 
 const Landing: React.FC = () => {
   Globals.assign({
@@ -51,30 +51,8 @@ const Landing: React.FC = () => {
       </div>
       {/* Content */}
       <div className="relative z-10">
-        {/* Navigation Bar */}
-        <motion.nav
-          className="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-80 py-4"
-          initial={{ y: -100 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="container mx-auto px-4 flex justify-between items-center">
-            <Link href="/" className="text-2xl font-bold">
-              Secret Santa Pro
-            </Link>
-            <div className="hidden md:flex space-x-6">
-              <a href="#home" className="hover:text-gray-300 transition">
-                Accueil
-              </a>
-              <a href="#features" className="hover:text-gray-300 transition">
-                Fonctionnalités
-              </a>
-              <Link href="/app" className="hover:text-gray-300 transition">
-                App
-              </Link>
-            </div>
-          </div>
-        </motion.nav>
+        {/* Header */}
+        <Header />
         {/* Hero Section */}
         <motion.section
           ref={targetRef}

@@ -61,25 +61,9 @@ const FeatureSection = () => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const goToNextFeature = useCallback(() => {
-    switch (activeIndex) {
-      case 0:
-        setActiveIndex(1);
-        break;
-      case 1:
-        setActiveIndex(2);
-        break;
-      case 2:
-        setActiveIndex(3);
-        break;
-      case 3:
-        setActiveIndex(0);
-        break;
-      default:
-        setActiveIndex(0);
-        break;
-    }
+    setActiveIndex((prevIndex) => (prevIndex + 1) % features.length);
     setProgress(0); // Reset progress when switching features
-  }, [activeIndex]);
+  }, []);
 
   useEffect(() => {
     const cycleTime = isHovered ? 8000 : 4000; // Change cycle time based on hover
@@ -124,11 +108,12 @@ const FeatureSection = () => {
   };
 
   return (
-    <section id="features" className="py-12 md:py-24 relative">
+    <section id="features" className="py-12 relative">
       <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-800 to-black opacity-80 backdrop-blur-lg z-0"></div>
-      <div className="container mx-auto px-4 relative z-10">
+
+      <div className="container mx-auto px-4 relative z-10 h-full flex flex-col justify-center">
         <motion.h2
-          className="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12 text-white"
+          className="text-2xl md:text-4xl font-bold text-center text-white pb-8 sm:pb-8 md:pb-12 lg:pb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
@@ -136,9 +121,20 @@ const FeatureSection = () => {
         >
           Fonctionnalités Clés
         </motion.h2>
+        {/* // subtitle only on mobile  */}
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <motion.p
+          className="text-center text-lg text-gray-300 mb-8 lg:mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          Découvrez comment Secret Santa Pro rend votre événement unique
+        </motion.p>
+
+        {/* Features Grid - Full on larger screens, only active on mobile */}
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-1 lg:grid-cols-4">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -148,14 +144,15 @@ const FeatureSection = () => {
               viewport={{ once: true }}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              onClick={() => handleClick(index)} // Allow clicking to highlight
+              onClick={() => handleClick(index)}
+              className={`${activeIndex === index ? "" : "hidden"} lg:block`} // Show only the active card on mobile
             >
               <Card
                 className={`h-full bg-white bg-opacity-10 border-gray-700 hover:bg-opacity-20 transition-all duration-300 overflow-hidden group backdrop-blur-md ${
                   activeIndex === index ? "ring-2 ring-blue-500" : ""
                 }`}
               >
-                <CardContent className="p-4 md:p-6 relative">
+                <CardContent className="p-4 md:p-6 flex flex-col items-center justify-center text-center">
                   <div className="absolute top-0 right-0 m-2">
                     <Badge
                       variant="secondary"
@@ -164,14 +161,11 @@ const FeatureSection = () => {
                       {feature.badge}
                     </Badge>
                   </div>
-                  <feature.icon className="text-3xl md:text-4xl mb-3 md:mb-4 text-white group-hover:scale-110 transition-transform duration-300" />
+                  <feature.icon className="text-4xl mb-3 text-white group-hover:scale-110 transition-transform duration-300" />
                   <h3 className="text-lg md:text-xl font-semibold mb-1 group-hover:text-gray-300 transition-colors duration-300 text-white">
                     {feature.title}
                   </h3>
-                  <h4 className="text-xs md:text-sm font-medium mb-2 text-gray-400 group-hover:text-gray-200 transition-colors duration-300">
-                    {feature.subtitle}
-                  </h4>
-                  <p className="text-xs md:text-sm text-gray-400 group-hover:text-white transition-colors duration-300">
+                  <p className="hidden md:block text-sm text-gray-400 group-hover:text-white transition-colors duration-300">
                     {feature.description}
                   </p>
                 </CardContent>
@@ -188,12 +182,12 @@ const FeatureSection = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6 }}
-            className="mt-8 md:mt-12 max-w-3xl mx-auto bg-white bg-opacity-10 rounded-lg p-6 backdrop-blur-md"
+            className="mt-8 md:mt-12 max-w-3xl mx-auto bg-white bg-opacity-10 rounded-lg p-6 backdrop-blur-md shadow-lg"
           >
-            <h3 className="text-2xl font-bold text-white mb-4">
+            <h3 className="text-2xl font-bold text-white mb-4 text-center">
               {features[activeIndex].title}
             </h3>
-            <p className="text-lg text-gray-300 mb-6">
+            <p className="text-lg text-gray-300 mb-6 text-center">
               {features[activeIndex].detailedDescription}
             </p>
             <div className="flex justify-between items-center">
