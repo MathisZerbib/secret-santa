@@ -17,7 +17,7 @@ import Loader from "@/components/ui/loader";
 // import { Button } from "@/components/ui/button";
 import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
 import Provider from "@/components/provider";
-import LoginBtn from "@/components/login-btn";
+import LoginBtn from "@/components/LoginBtn";
 
 const getGifts = async (groupId?: string): Promise<Gift[]> => {
   try {

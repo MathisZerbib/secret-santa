@@ -90,14 +90,14 @@ export default function CallToActionSection({ className = "" }) {
         viewport={{ once: true }}
       >
         <h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-6 text-white">
-          Prêt à{" "}
+          Prêt à
           <AnimatePresence mode="wait">
             <motion.span
               key={currentVerbIndex}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.2 }}
               ref={verbRef}
               style={{
                 display: "inline-block",
@@ -107,7 +107,7 @@ export default function CallToActionSection({ className = "" }) {
             >
               {verbs[currentVerbIndex]}
             </motion.span>
-          </AnimatePresence>{" "}
+          </AnimatePresence>
           votre Secret Santa ?
         </h2>
         <form onSubmit={handleSubmit} className="max-w-md mx-auto">
@@ -136,7 +136,7 @@ export default function CallToActionSection({ className = "" }) {
             className="w-full md:w-auto bg-white text-orange-600 hover:bg-gray-200"
             disabled={isLoading}
           >
-            {isLoading ? "Envoi en cours..." : "Commencer Gratuitement"}
+            {isLoading ? "Envoi en cours..." : "S'inscrire à la newsletter"}
           </Button>
         </form>
       </motion.div>
