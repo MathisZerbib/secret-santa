@@ -20,7 +20,7 @@ const HeaderSession: FC<HeaderSessionProps> = ({
   onLogout,
 }) => {
   return (
-    <header className="flex flex-col justify-center mx-auto p-8 backdrop-blur-md bg-white bg-opacity-10 shadow-xl overflow-hidden max-w-6xl w-full">
+    <header className="flex flex-col justify-center mx-auto p-8 backdrop-blur-md bg-white bg-opacity-10 shadow-xl overflow-hidden w-full">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
         <div className="text-2xl font-bold">Secret Santa </div>
@@ -57,8 +57,11 @@ const HeaderSession: FC<HeaderSessionProps> = ({
               Abonnement
             </DropdownMenuItem>
 
-            <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
-              Deconnecter
+            <DropdownMenuItem
+              onClick={onLogout}
+              className="cursor-pointer text-red-500"
+            >
+              Déconnexion
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

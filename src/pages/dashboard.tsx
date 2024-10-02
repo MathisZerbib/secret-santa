@@ -147,7 +147,7 @@ const Dashboard = () => {
               <div className="flex flex-col items-center justify-center h-full">
                 <FaPlus className="text-4xl text-white mb-4" />
                 <span className="text-xl font-semibold text-white">
-                  Create New Group
+                  Créer un nouveau groupe
                 </span>
               </div>
             </div>
@@ -157,14 +157,13 @@ const Dashboard = () => {
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-8 rounded-xl max-w-md w-full">
-              <h2 className="text-2xl font-bold mb-4">Create New Group</h2>
-              <CreateGroupForm onSubmit={handleCreateGroup} />
-              <Button
-                onClick={() => setShowCreateForm(false)}
-                className="mt-4 w-full bg-gray-300 text-black hover:bg-gray-400"
-              >
-                Cancel
-              </Button>
+              <h2 className="text-2xl font-bold mb-4 text-black">
+                Créer un nouveau groupe
+              </h2>
+              <CreateGroupForm
+                onSubmit={handleCreateGroup}
+                onCancel={() => setShowCreateForm(false)}
+              />
             </div>
           </div>
         )}
