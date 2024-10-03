@@ -15,7 +15,12 @@ export const authOptions: NextAuthOptions = {
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
-
+	pages: {
+		signIn: "/auth/signin",
+		signOut: "/auth/signout",
+		error: "/auth/error",
+		verifyRequest: "/auth/verify-request",
+	},
 	callbacks: {
 		async session({ session, user }) {
 			session!.user!.id = user.id;

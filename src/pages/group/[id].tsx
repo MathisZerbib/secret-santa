@@ -53,7 +53,7 @@ const GroupPage = () => {
       const fetchGroupAndGifts = async () => {
         const groupExists = await checkGroupExists(id as string);
         if (!groupExists) {
-          // router.push("/app");
+          router.push("/app");
           console.error("Group does not exist");
           return;
         }
@@ -76,9 +76,6 @@ const GroupPage = () => {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        {/* Add your ShaderGradientCanvas here if needed */}
-      </div>
       <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
         <div className="mx-auto max-w-2xl w-full">
           <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">

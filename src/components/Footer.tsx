@@ -31,7 +31,9 @@ export default function Footer({ className = "" }) {
             Terms of Service
           </a>
           <a
-            href={`mailto:${process.env.SENDGRID_FROM_EMAIL}`}
+            href={`mailto:${
+              process.env.SENDGRID_FROM_EMAIL || "mathis.zerbib@epitech.eu"
+            }`}
             className="text-gray-400 hover:text-white transition-colors"
           >
             Contact

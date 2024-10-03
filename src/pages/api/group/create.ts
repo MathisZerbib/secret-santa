@@ -58,8 +58,8 @@ export default async function handler(
           name: process.env.SENDGRID_FROM_NAME as string,
         },
         subject: 'Your Secret Santa Group Invite Code',
-        text: `Your invite code for the Secret Santa group "${name}" is: ${inviteCode}`,
-        html: `<strong>Your invite code for the Secret Santa group "${name}" is: ${inviteCode}</strong>`,
+        text: `Your invite code for the Secret Santa group "${name}" is: ${inviteCode}, your admin password is: ${manager.token}`,
+        html: `<p>Your invite code for the Secret Santa group "${name}" is: <strong>${inviteCode}</strong>, your admin password is: <strong>${manager.token}</strong></p>`,
       };
 
       await sgMail.send(msg);

@@ -193,10 +193,10 @@ export default function MainContent({ initialGifts }: MainContentProps) {
       >
         {/* <ThemesMenu setBackgroundImage={setBackgroundImage} /> */}
         <div className="relative z-50">
-          {/* <AdminSpace
+          <AdminSpace
             onAddRecipient={handleAddRecipient}
             onOrganizeSecretSanta={organizeSecretSanta}
-          /> */}
+          />
         </div>
       </motion.div>
       <br />
