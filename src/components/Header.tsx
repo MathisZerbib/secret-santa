@@ -53,9 +53,8 @@ const Header: React.FC = () => {
 
           <Button
             asChild
-            className={
-              isScrolled ? "bg-white text-black hover:bg-gray-400" : ""
-            }
+            variant={isScrolled ? "outline" : "default"}
+            className="text-orange-500 border border-transparent bg-white hover:bg-transparent hover:text-white hover:border hover:border-white"
           >
             <Link href="/app">Rejoindre</Link>
           </Button>

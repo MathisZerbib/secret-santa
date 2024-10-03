@@ -69,7 +69,7 @@ const GroupPage = () => {
   if (isLoading) {
     return (
       <div className="container mx-auto flex justify-center items-center min-h-screen">
-        <Loader size={80} />
+        <Loader size={80} color="white" />
       </div>
     );
   }

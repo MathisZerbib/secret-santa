@@ -136,7 +136,7 @@ export default function GiftList({
                   </button>
                 </>
               )}
-              <span className="ml-2 text-sm text-gray-400">
+              <span className="ml-2 text-sm text-white">
                 (Pour : {gift.recipient && gift.recipient.name})
               </span>
             </div>
@@ -159,7 +159,7 @@ export default function GiftList({
                 variant="outline"
                 size="sm"
                 onClick={() => handleDeleteClick(gift)}
-                className="ml-2 text-red-500"
+                className="ml-2 text-white"
               >
                 <FaTrash />
               </Button>

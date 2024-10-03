@@ -17,9 +17,13 @@ interface GiftFormProps {
     recipientEmail: string,
     giftLink: string
   ) => void;
+  secretSantaGroupId: number;
 }
 
-const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
+const GiftForm: React.FC<GiftFormProps> = ({
+  onAddGift,
+  secretSantaGroupId,
+}) => {
   const [giftName, setGiftName] = useState("");
   const [giftLink, setGiftLink] = useState("");
   const [recipients, setRecipients] = useState<
@@ -77,6 +81,7 @@ const GiftForm: React.FC<GiftFormProps> = ({ onAddGift }) => {
           body: JSON.stringify({
             name: newRecipientName,
             email: newRecipientEmail,
+            secretSantaGroupId,
           }),
         });
         if (!response.ok) throw new Error("Failed to add new recipient");

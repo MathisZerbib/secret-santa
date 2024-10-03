@@ -1,4 +1,4 @@
-// pages/api/addGift.ts
+// pages/api/recipients/create.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();

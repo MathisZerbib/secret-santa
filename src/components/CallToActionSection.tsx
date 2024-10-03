@@ -133,7 +133,7 @@ export default function CallToActionSection({ className = "" }) {
           <Button
             type="submit"
             size="lg"
-            className="w-full md:w-auto bg-white text-orange-600 hover:bg-gray-200"
+            className="w-full md:w-auto text-orange-500 border border-transparent bg-white hover:bg-transparent hover:text-white hover:border hover:border-white"
             disabled={isLoading}
           >
             {isLoading ? "Envoi en cours..." : "S'inscrire à la newsletter"}

@@ -81,16 +81,20 @@ export const SubscriptionCard = ({
   return (
     <div
       onClick={() => handleCreateCheckoutSession(priceId)}
-      className="p-4 md:p-6 lg:p-8 border-2 border-white border-opacity-20 rounded-lg backdrop-blur-md bg-white bg-opacity-10 hover:cursor-pointer hover:bg-opacity-20 hover:scale-105 duration-300 transition-all w-full max-w-[20rem] min-h-[20rem] mx-auto mb-8"
+      className="p-4 sm:p-6 md:p-8 border-2 border-white border-opacity-20 rounded-lg backdrop-blur-md bg-white bg-opacity-10 hover:cursor-pointer hover:bg-opacity-20 hover:scale-105 duration-300 transition-all w-full max-w-[20rem] min-h-[20rem] mx-auto mb-4 sm:mb-8"
     >
-      <div className="font-bold text-2xl md:text-3xl mb-2 capitalize text-white">
+      <div className="font-bold text-xl sm:text-2xl md:text-3xl mb-2 capitalize text-white">
         {planType}
       </div>
       <div className="flex items-baseline mb-2">
-        <div className="text-2xl md:text-3xl mr-2 text-white">{price}</div>
-        <span className="text-lg md:text-xl text-white">/ Mois</span>
+        <div className="text-xl sm:text-2xl md:text-3xl mr-2 text-white">
+          {price}
+        </div>
+        <span className="text-base sm:text-lg md:text-xl text-white">
+          / annuel
+        </span>
       </div>
-      <ul className="list-disc pl-4 text-white space-y-1">
+      <ul className="list-disc pl-4 text-white space-y-1 text-sm sm:text-base">
         {features.map((feature, index) => (
           <li key={index}>{feature}</li>
         ))}

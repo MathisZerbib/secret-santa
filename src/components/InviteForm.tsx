@@ -20,7 +20,7 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSubmit }) => {
         <Input
           id="inviteCode"
           type="text"
-          placeholder="Entrer un code d'invitation"
+          placeholder="Entrer votre code d'invitation"
           value={inviteCode}
           onChange={(e) => setInviteCode(e.target.value)}
           required
@@ -28,12 +28,12 @@ const InviteForm: React.FC<InviteFormProps> = ({ onSubmit }) => {
         />
         <Button
           type="submit"
-          className="w-full p-2 bg-white bg-opacity-20 text-white hover:bg-opacity-30 transition-all duration-300"
+          className="w-full p-2 bg-white bg-opacity-20 text-white hover:bg-opacity-100 hover:bg-white hover:text-black transition-all duration-300 hover:shadow-lg"
         >
           Rejoindre
         </Button>
       </form>
-      <div className="flex items-center justify-center space-x-2">
+      <div className="flex items-center justify-center space-x-2 pb-4">
         <div className="flex-grow border-t border-white opacity-50"></div>
         <span className="text-white opacity-75">ou</span>
         <div className="flex-grow border-t border-white opacity-50"></div>

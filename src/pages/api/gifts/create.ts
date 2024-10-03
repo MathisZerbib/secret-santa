@@ -1,4 +1,4 @@
-// Example: /api/gifts/create.js
+// Example: /api/gifts/create.ts
 import { PrismaClient } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -6,17 +6,18 @@ const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === 'POST') {
-        const { giftName, recipientName, recipientEmail, link } = req.body;
+        const { giftName, recipientName, recipientEmail, link, secretSantaGroupId } = req.body;
 
         try {
             const newGift = await prisma.gift.create({
                 data: {
                     name: giftName,
                     link: link,
+                    SecretSantaGroup: { connect: { id: secretSantaGroupId } },
                     recipient: {
                         connectOrCreate: {
                             where: { email: recipientEmail },
-                            create: { name: recipientName, email: recipientEmail },
+                            create: { name: recipientName, email: recipientEmail, secretSantaGroupId: secretSantaGroupId },
                         },
                     },
                 },

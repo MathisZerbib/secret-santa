@@ -26,7 +26,7 @@ const GiftItem: React.FC<GiftItemProps> = ({
     >
       <div className="flex-grow">
         <span className={gift.bought ? "line-through" : ""}>{gift.name}</span>
-        <span className="ml-2 text-sm text-gray-600">
+        <span className="ml-2 text-sm text-white">
           (Pour : {gift.recipient && gift.recipient.name})
         </span>
       </div>

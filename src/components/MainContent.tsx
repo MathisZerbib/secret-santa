@@ -1,6 +1,5 @@
-// components/MainContent.tsx
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import GiftForm from "./GiftForm";
 import GiftList from "./GiftList";
 import FilterInput from "./FilterInput";
@@ -16,14 +15,24 @@ interface MainContentProps {
 }
 
 export default function MainContent({ initialGifts }: MainContentProps) {
+  const router = useRouter();
   const [gifts, setGifts] = useState(initialGifts);
   const [filter, setFilter] = useState("");
   const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [secretSantaGroupId, setSecretSantaGroupId] = useState(Number);
 
-  const setBackgroundImage = (image: string) => {
-    document.body.style.backgroundImage = `url(${image})`;
-    localStorage.setItem("selectedTheme", image);
-  };
+  // Extract secretSantaGroupId from the query URL
+  useEffect(() => {
+    const { id } = router.query;
+    if (typeof id === "string") {
+      setSecretSantaGroupId(Number(id));
+    }
+  }, [router.query, setSecretSantaGroupId]);
+
+  // const setBackgroundImage = (image: string) => {
+  //   document.body.style.backgroundImage = `url(${image})`;
+  //   localStorage.setItem("selectedTheme", image);
+  // };
 
   const handleAddRecipient = async (recipient: Recipient) => {
     try {
@@ -34,7 +43,7 @@ export default function MainContent({ initialGifts }: MainContentProps) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(recipient),
+          body: JSON.stringify({ ...recipient, secretSantaGroupId }),
         }
       );
       if (!response.ok) {
@@ -77,6 +86,7 @@ export default function MainContent({ initialGifts }: MainContentProps) {
             recipientName: recipientName,
             recipientEmail: recipientEmail,
             link: giftLink,
+            secretSantaGroupId: secretSantaGroupId,
           }),
         }
       );
@@ -179,16 +189,14 @@ export default function MainContent({ initialGifts }: MainContentProps) {
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.5 }}
-        className="absolute top-4 right-4 z-50" // Add z-50 here
+        className="absolute top-4 right-4 z-50"
       >
-        <ThemesMenu setBackgroundImage={setBackgroundImage} />
+        {/* <ThemesMenu setBackgroundImage={setBackgroundImage} /> */}
         <div className="relative z-50">
-          {" "}
-          {/* Add this wrapper */}
-          <AdminSpace
+          {/* <AdminSpace
             onAddRecipient={handleAddRecipient}
             onOrganizeSecretSanta={organizeSecretSanta}
-          />
+          /> */}
         </div>
       </motion.div>
       <br />
@@ -198,7 +206,7 @@ export default function MainContent({ initialGifts }: MainContentProps) {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="max-w-2xl mx-auto p-6 rounded-lg shadow-md mt-16 sm:mt-8"
       >
-        <GiftForm onAddGift={addGift} />
+        <GiftForm onAddGift={addGift} secretSantaGroupId={secretSantaGroupId} />
         <FilterInput
           filter={filter}
           onFilterChange={setFilter}

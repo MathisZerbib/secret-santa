@@ -1,7 +1,7 @@
 "use client";
 
 import "../app/globals.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import MainContent from "../components/MainContent";
 import InviteForm from "../components/InviteForm";
@@ -12,9 +12,9 @@ import {
   CardTitle,
   CardContent,
 } from "../components/ui/card";
-import Loader from "@/components/ui/loader";
+// import Loader from "@/components/ui/loader";
 // import { Button } from "@/components/ui/button";
-import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
+// import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
 import Provider from "@/components/provider";
 import LoginBtn from "@/components/LoginBtn";
 
@@ -39,39 +39,17 @@ const getGifts = async (groupId?: string): Promise<Gift[]> => {
 
 export default function App() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(false);
   const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
   const [view] = useState<"join" | "create" | "main">("join");
   const [inviteCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isValidInviteCode, setIsValidInviteCode] = useState(false);
-  const [showGradient, setShowGradient] = useState(true);
-
-  useEffect(() => {
-    const checkUserStatus = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/user/status`
-        );
-        if (response.ok) {
-          const data = await response.json();
-          console.log("User status:", data);
-          const giftsData = await getGifts();
-          setInitialGifts(giftsData);
-        }
-      } catch (error) {
-        console.error("Error checking user status:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkUserStatus();
-  }, []);
+  // const [showGradient, setShowGradient] = useState(true);
 
   const handleInviteSubmit = async (inviteCode: string) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/group/validate-invite`,
@@ -88,13 +66,10 @@ export default function App() {
       }
 
       setIsValidInviteCode(true);
-      const giftsData = await getGifts(inviteCode);
-      setInitialGifts(giftsData);
-      setSuccessMessage("Valid invite code. You can now view the gifts.");
-      setShowGradient(false);
 
       // Redirect to the group page
-      router.push(`/group/${inviteCode}`);
+      const data = await response.json();
+      router.push(`/group/${data.groupId}`);
 
       return true;
     } catch (error) {
@@ -103,39 +78,19 @@ export default function App() {
       );
       return false;
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="container mx-auto flex justify-center items-center min-h-screen">
-        <Loader size={80} />
-      </div>
-    );
-  }
 
   return (
     <Provider>
       <div className="relative min-h-screen overflow-hidden">
-        {/* Shader background */}
-        <div className="absolute inset-0 z-0">
-          <ShaderGradientCanvas
-            className={showGradient ? "opacity-100" : "opacity-0"}
-          >
-            <ShaderGradient
-              control="query"
-              urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
-            />
-          </ShaderGradientCanvas>
-        </div>
-
         {/* Main content */}
         <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
           <div className="mx-auto max-w-md w-full">
             <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">
               {isValidInviteCode ? (
-                <MainContent initialGifts={initialGifts} />
+                <></>
               ) : (
                 <Card className="bg-transparent border-none">
                   <CardHeader>

@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
 import Image from "next/image";
-import { Loader } from "lucide-react";
+import Loader from "./ui/loader";
 
 const baseBtnStyle =
-  "bg-slate-100 hover:bg-slate-200 text-black px-6 py-2 rounded-md capitalize font-bold mt-1 flex items-center";
+  "bg-slate-100 hover:bg-slate-200 text-black px-6 py-2 rounded-md capitalize font-bold mt-1 flex items-center mb-2";
 
 export default function LoginBtn() {
   const { data: session, status } = useSession();
