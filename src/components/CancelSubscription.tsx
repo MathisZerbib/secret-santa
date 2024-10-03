@@ -38,7 +38,7 @@ const CancelSubscription: React.FC = () => {
       toast({
         title: "Erreur",
         description:
-          "Échec de l'annulation de l'abonnement. Veuillez réessayer.",
+          "Échec lors de l'annulation de l'abonnement. Veuillez réessayer.",
       });
     } finally {
       setIsLoading(false);

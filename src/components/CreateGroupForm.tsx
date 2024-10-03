@@ -5,13 +5,9 @@ import { useSession } from "next-auth/react";
 
 interface CreateGroupFormProps {
   onSubmit: (groupName: string, email: string) => Promise<void>;
-  onCancel: () => void;
 }
 
-const CreateGroupForm: React.FC<CreateGroupFormProps> = ({
-  onSubmit,
-  onCancel,
-}) => {
+const CreateGroupForm: React.FC<CreateGroupFormProps> = ({ onSubmit }) => {
   const [groupName, setGroupName] = useState("");
   const { data: session } = useSession();
   const [email, setEmail] = useState("");
@@ -30,6 +26,7 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
+        {/* /// cross to close form  */}
         <Input
           id="groupName"
           type="text"
@@ -41,13 +38,6 @@ const CreateGroupForm: React.FC<CreateGroupFormProps> = ({
         />
       </div>
       <div className="flex space-x-2">
-        <Button
-          type="button"
-          onClick={onCancel}
-          className="flex-3 p-2 bg-white text-black hover:bg-gray-100 transition-all duration-300 rounded-md"
-        >
-          Annuler
-        </Button>
         <Button
           type="submit"
           className="flex-1 p-2 bg-black text-white hover:bg-opacity-30 transition-all duration-300 rounded-md"

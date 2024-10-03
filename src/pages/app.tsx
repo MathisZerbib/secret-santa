@@ -5,7 +5,6 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import MainContent from "../components/MainContent";
 import InviteForm from "../components/InviteForm";
-// import CreateGroupForm from "../components/CreateGroupForm";
 import { Gift } from "../types/gift";
 import {
   Card,

@@ -23,7 +23,8 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 	}
 
 	try {
-		const successUrl = process.env.NEXT_PUBLIC_API_URL + `?session_id={CHECKOUT_SESSION_ID}`;
+		// const successUrl = process.env.NEXT_PUBLIC_API_URL + `?session_id={CHECKOUT_SESSION_ID}`;
+		const successUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard";
 		const cancelUrl = process.env.NEXT_PUBLIC_API_URL;
 
 		if (!successUrl || !cancelUrl) {

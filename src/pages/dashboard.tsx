@@ -6,16 +6,20 @@ import CreateGroupForm from "../components/CreateGroupForm";
 import { Button } from "../components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
-// import { ShaderGradient, ShaderGradientCanvas } from "shadergradient";
-import { FaCopy, FaPlus } from "react-icons/fa";
+import { FaCopy, FaPlus, FaTimes, FaTrash } from "react-icons/fa";
 import HeaderSession from "../components/HeaderSession";
 import Loader from "@/components/ui/loader";
+import DeleteConfirmationDialog from "../components/DeleteConfirmationDialog";
 
 const Dashboard = () => {
   const router = useRouter();
   const [groups, setGroups] = useState<SecretSantaGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState<SecretSantaGroup | null>(
+    null
+  );
   const [user, setUser] = useState<{ name: string } | null>(null);
   const { toast } = useToast();
 
@@ -74,6 +78,31 @@ const Dashboard = () => {
     }
   };
 
+  const handleDeleteGroup = async () => {
+    if (!groupToDelete) return;
+
+    try {
+      await fetch(`/api/group/delete?id=${groupToDelete.id}`, {
+        method: "DELETE",
+      });
+
+      setGroups((prevGroups) =>
+        prevGroups.filter((group) => group.id !== groupToDelete.id)
+      );
+      setShowDeleteDialog(false);
+      toast({
+        title: "Success",
+        description: "Group deleted successfully.",
+      });
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete group.",
+      });
+    }
+  };
+
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast({
@@ -88,7 +117,11 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return <Loader size={40} />;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader size={80} />;
+      </div>
+    );
   }
 
   return (
@@ -103,14 +136,6 @@ const Dashboard = () => {
     >
       <HeaderSession userName={user?.name || ""} onLogout={handleLogout} />
       <div className="flex-grow flex justify-center items-center py-12">
-        {/* <div className="absolute inset-0 z-auto"> */}
-        {/* <ShaderGradientCanvas>
-            <ShaderGradient
-              control="query"
-              urlString="https://www.shadergradient.co/customize?animate=on&axesHelper=off&bgColor1=%23000000&bgColor2=%23000000&brightness=1.2&cAzimuthAngle=180&cDistance=3.6&cPolarAngle=90&cameraZoom=2&color1=%23ff5005&color2=%23dbba95&color3=%23d0bce1&destination=onCanvas&embedMode=off&envPreset=lobby&format=gif&fov=45&frameRate=10&gizmoHelper=hide&grain=on&lightType=env&pixelDensity=1&positionX=-1.4&positionY=0&positionZ=0&range=enabled&rangeEnd=40&rangeStart=0&reflection=0.1&rotationX=0&rotationY=10&rotationZ=50&shader=defaults&type=plane&uDensity=1.3&uFrequency=5.5&uSpeed=0.4&uStrength=4&uTime=0&wireframe=false"
-            />
-          </ShaderGradientCanvas> */}
-        {/* </div> */}
         <div className="flex flex-col justify-center mx-auto p-8 backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden max-w-6xl w-full">
           <h1 className="text-4xl font-bold mb-8 text-center text-white">
             Dashboard
@@ -118,8 +143,8 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {groups.map((group: SecretSantaGroup) => (
               <div
-                key={group.id}
-                className="p-6 border border-gray-300 rounded-xl shadow-lg transition-transform transform hover:scale-105 bg-white bg-opacity-20"
+                key={group.inviteCode}
+                className="p-6 border border-gray-300 rounded-xl shadow-lg transition-transform transform hover:scale-105 bg-white bg-opacity-20 relative"
               >
                 <div className="font-bold text-2xl mb-2 text-center text-white">
                   {group.name}
@@ -138,6 +163,15 @@ const Dashboard = () => {
                     View Group
                   </Button>
                 </Link>
+                <button
+                  onClick={() => {
+                    setGroupToDelete(group);
+                    setShowDeleteDialog(true);
+                  }}
+                  className="absolute top-4 right-4 text-white hover:text-red-500 focus:outline-none"
+                >
+                  <FaTrash className="text-xl" />
+                </button>
               </div>
             ))}
             <div
@@ -156,17 +190,28 @@ const Dashboard = () => {
 
         {showCreateForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-xl max-w-md w-full">
-              <h2 className="text-2xl font-bold mb-4 text-black">
+            <div className="bg-white p-8 rounded-xl max-w-md w-full relative">
+              <button
+                type="button"
+                onClick={() => setShowCreateForm(false)}
+                className="absolute top-4 right-4 text-black hover:text-gray-700 focus:outline-none"
+              >
+                <FaTimes className="text-2xl" />
+              </button>
+              <h2 className="text-2xl font-bold mb-4 text-black text-center">
                 Créer un nouveau groupe
               </h2>
-              <CreateGroupForm
-                onSubmit={handleCreateGroup}
-                onCancel={() => setShowCreateForm(false)}
-              />
+              <CreateGroupForm onSubmit={handleCreateGroup} />
             </div>
           </div>
         )}
+
+        <DeleteConfirmationDialog
+          isOpen={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={handleDeleteGroup}
+          message="Êtes-vous sûr de vouloir supprimer ce groupe ?"
+        />
       </div>
     </div>
   );

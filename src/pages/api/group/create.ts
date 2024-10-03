@@ -64,7 +64,7 @@ export default async function handler(
 
       await sgMail.send(msg);
 
-      return res.status(200).json({ inviteCode, groupId: group.id });
+      return res.status(200).json({ inviteCode, groupId: group.id, name: group.name });
     } catch (error) {
       console.error("Error creating group:", error);
       return res.status(500).json({ error: "Internal Server Error" });
