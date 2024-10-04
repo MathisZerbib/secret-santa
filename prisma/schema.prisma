@@ -9,7 +9,7 @@ datasource db {
 
 model Gift {
   id                 Int               @id @default(autoincrement())
-  name               String
+  name               String            @db.VarChar(100)
   bought             Boolean           @default(false)
   link               String?
   recipientId        Int
@@ -20,8 +20,8 @@ model Gift {
 
 model Recipient {
   id                 Int               @id @default(autoincrement())
-  name               String
-  email              String            @unique
+  name               String            @db.VarChar(100)
+  email              String            @unique @db.VarChar(255)
   gifts              Gift[]
   secretSantaGroupId Int?
   SecretSantaGroup   SecretSantaGroup? @relation(fields: [secretSantaGroupId], references: [id])
@@ -59,8 +59,8 @@ model Session {
 
 model User {
   id               String    @id @default(cuid())
-  name             String?
-  email            String?   @unique
+  name             String?   @db.VarChar(100)
+  email            String?   @unique @db.VarChar(255)
   emailVerified    DateTime?
   image            String?
   stripeCustomerId String?   @unique
