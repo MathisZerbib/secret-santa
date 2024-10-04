@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { getSession, signOut } from "next-auth/react";
@@ -27,14 +29,30 @@ const Dashboard = () => {
     const fetchGroups = async () => {
       const session = await getSession();
       if (!session) {
-        router.push("/api/auth/signin");
-        return;
+        return (
+          <div className="flex justify-center items-center min-h-screen">
+            <p className="text-white text-2xl">
+              Please login to view this page
+            </p>
+            <Link href="/api/auth/signin" passHref>
+              <Button className="text-white">Login</Button>
+            </Link>
+          </div>
+        );
       }
-      if (session.user) {
-        setUser({ name: session.user.name ?? "" });
+      if (session.user && session.user.name) {
+        setUser({ name: session.user.name });
       } else {
-        router.push("/api/auth/signin");
-        return;
+        return (
+          <div className="flex justify-center items-center min-h-screen">
+            <p className="text-white text-2xl">
+              Please login to view this page
+            </p>
+            <Link href="/api/auth/signin" passHref>
+              <Button className="text-white">Login</Button>
+            </Link>
+          </div>
+        );
       }
 
       try {
@@ -134,6 +152,15 @@ const Dashboard = () => {
       </div>
     );
   }
+  /// return go to login if not logged in
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-white text-2xl">Please login to view this page</p>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex flex-col min-h-screen">
@@ -145,6 +172,7 @@ const Dashboard = () => {
           </h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {groups &&
+              groups.length > 0 &&
               groups.map((group: SecretSantaGroup) => (
                 <div
                   key={group.inviteCode}
