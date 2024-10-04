@@ -14,7 +14,7 @@ interface MainContentProps {
   initialGifts: Gift[];
 }
 
-export default function MainContent({ initialGifts }: MainContentProps) {
+function MainContent({ initialGifts }: MainContentProps) {
   const router = useRouter();
   const [gifts, setGifts] = useState(initialGifts);
   const [filter, setFilter] = useState("");
@@ -228,3 +228,5 @@ export default function MainContent({ initialGifts }: MainContentProps) {
     </motion.div>
   );
 }
+
+export default MainContent;

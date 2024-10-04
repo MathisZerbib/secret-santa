@@ -2,11 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 
-export default function SmoothScroll({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function SmoothScroll({ children }: { children: React.ReactNode }) {
   const { scrollYProgress } = useScroll();
   const smoothProgress = useSpring(scrollYProgress, { mass: 0.1 });
   const contentRef = useRef<HTMLDivElement>(null);
@@ -40,3 +36,5 @@ export default function SmoothScroll({
     </>
   );
 }
+
+export default SmoothScroll;

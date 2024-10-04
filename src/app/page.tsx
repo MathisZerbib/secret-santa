@@ -5,7 +5,7 @@
 import Provider from "@/components/provider";
 import Landing from "../components/Landing";
 
-export default function Home() {
+function Home() {
   return (
     <>
       <Provider>
@@ -14,3 +14,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home;

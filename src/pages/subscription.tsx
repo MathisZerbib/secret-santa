@@ -6,7 +6,7 @@ import { subscription } from "../../constants";
 import { SubscriptionCard } from "../components/SubscriptionCard";
 import HeaderSession from "@/components/HeaderSession";
 
-export default function SubscriptionPage() {
+function SubscriptionPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -50,3 +50,5 @@ export default function SubscriptionPage() {
     </div>
   );
 }
+
+export default SubscriptionPage;

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	// https://github.com/stripe/stripe-node#configuration
-	apiVersion: "2024-06-20",
+	apiVersion: "2024-09-30.acacia",
 });
 
 const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!;

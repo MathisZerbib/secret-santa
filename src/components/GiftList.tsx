@@ -15,7 +15,7 @@ interface GiftListProps {
   onDeleteGift: (id: number) => void; // New prop for deleting gifts
 }
 
-export default function GiftList({
+function GiftList({
   gifts,
   filter,
   onUpdateLink,
@@ -181,3 +181,5 @@ export default function GiftList({
     </div>
   );
 }
+
+export default GiftList;

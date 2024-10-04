@@ -6,7 +6,7 @@ import { Turnstile } from "@marsidev/react-turnstile";
 
 const verbs = ["améliorer", "organiser", "réaliser", "optimiser", "planifier"];
 
-export default function CallToActionSection({ className = "" }) {
+function CallToActionSection({ className = "" }) {
   const [currentVerbIndex, setCurrentVerbIndex] = useState(0);
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -143,3 +143,5 @@ export default function CallToActionSection({ className = "" }) {
     </div>
   );
 }
+
+export default CallToActionSection;

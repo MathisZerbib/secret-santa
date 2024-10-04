@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-export default function Footer({ className = "" }) {
+function Footer({ className = "" }) {
   return (
     <footer className={`bg-black py-8 px-4 ${className}`}>
       <div className="container mx-auto flex flex-col items-center justify-center">
@@ -43,3 +43,5 @@ export default function Footer({ className = "" }) {
     </footer>
   );
 }
+
+export default Footer;

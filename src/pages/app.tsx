@@ -37,7 +37,7 @@ import LoginBtn from "@/components/LoginBtn";
 //   }
 // };
 
-export default function App() {
+function App() {
   const router = useRouter();
   // const [isLoading, setIsLoading] = useState(false);
   // const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
@@ -133,3 +133,5 @@ export default function App() {
     </Provider>
   );
 }
+
+export default App;
