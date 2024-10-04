@@ -3,7 +3,6 @@ import prisma from "../../../../prisma/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-	// https://github.com/stripe/stripe-node#configuration
 	apiVersion: "2024-09-30.acacia",
 });
 
@@ -21,8 +20,6 @@ const webhookHandler = async (req: NextRequest) => {
 		} catch (err) {
 			const errorMessage =
 				err instanceof Error ? err.message : "Unknown error";
-			// On error, log and return the error message.
-			if (err! instanceof Error) console.log(err);
 			console.log(`❌ Error message: ${errorMessage}`);
 
 			return NextResponse.json(
@@ -35,10 +32,8 @@ const webhookHandler = async (req: NextRequest) => {
 			);
 		}
 
-		// Successfully constructed event.
 		console.log("✅ Success:", event.id);
 
-		// getting to the data we want from the event
 		const subscription = event.data.object as Stripe.Subscription;
 		const subscriptionId = subscription.id;
 
@@ -70,7 +65,6 @@ const webhookHandler = async (req: NextRequest) => {
 				break;
 		}
 
-		// Return a response to acknowledge receipt of the event.
 		return NextResponse.json({ received: true });
 	} catch {
 		return NextResponse.json(

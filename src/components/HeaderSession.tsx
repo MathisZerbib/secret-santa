@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -7,6 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import ManageSubscription from "@/components/ManageSubscription";
 
 interface HeaderSessionProps {
   userName: string;
@@ -19,11 +20,17 @@ const HeaderSession: FC<HeaderSessionProps> = ({
   userImage,
   onLogout,
 }) => {
+  const [isManageSubscriptionOpen, setIsManageSubscriptionOpen] =
+    useState(false);
+
+  const openManageSubscription = () => setIsManageSubscriptionOpen(true);
+  const closeManageSubscription = () => setIsManageSubscriptionOpen(false);
+
   return (
     <header className="flex flex-col justify-center mx-auto p-8 backdrop-blur-md bg-white bg-opacity-10 shadow-xl overflow-hidden w-full">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="text-2xl font-bold">Secret Santa </div>
+        <div className="text-2xl font-bold">Secret Santa</div>
 
         {/* User Dropdown Menu */}
         <DropdownMenu>
@@ -49,9 +56,7 @@ const HeaderSession: FC<HeaderSessionProps> = ({
               Profil
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => {
-                // Navigate to user profile page
-              }}
+              onClick={openManageSubscription}
               className="cursor-pointer"
             >
               Abonnement
@@ -66,6 +71,11 @@ const HeaderSession: FC<HeaderSessionProps> = ({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
+
+      <ManageSubscription
+        isOpen={isManageSubscriptionOpen}
+        onClose={closeManageSubscription}
+      />
     </header>
   );
 };

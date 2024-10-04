@@ -24,12 +24,25 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 
 	try {
 		// const successUrl = process.env.NEXT_PUBLIC_API_URL + `?session_id={CHECKOUT_SESSION_ID}`;
-		const successUrl = process.env.NEXT_PUBLIC_API_URL + "/dashboard";
+		const successUrl = process.env.NEXT_PUBLIC_API_URL + "/app"
 		const cancelUrl = process.env.NEXT_PUBLIC_API_URL;
 
 		if (!successUrl || !cancelUrl) {
 			throw new Error("Environment variables NEXT_PUBLIC_API_URL are not set");
 		}
+
+
+		// Debugging log to check the value of stripeCustomerId
+		if (!session.user.stripeCustomerId) {
+			return res.status(400).json({
+				error: {
+					code: "missing-customer-id",
+					message: "Stripe customer ID is missing.",
+				},
+			});
+		}
+
+
 
 		const checkoutSession = await stripe.checkout.sessions.create({
 			mode: "subscription",

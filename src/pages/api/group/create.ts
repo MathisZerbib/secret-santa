@@ -26,7 +26,7 @@ export default async function handler(
         where: { email: managerEmail },
       });
 
-
+        // TODO - Make this but on registration
       if (!manager) {
         // Create a new manager if they don't exist
         manager = await prisma.appManager.create({
