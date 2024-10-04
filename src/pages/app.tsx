@@ -18,29 +18,29 @@ import {
 import Provider from "@/components/provider";
 import LoginBtn from "@/components/LoginBtn";
 
-const getGifts = async (groupId?: string): Promise<Gift[]> => {
-  try {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${groupId}`;
+// const getGifts = async (groupId?: string): Promise<Gift[]> => {
+//   try {
+//     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${groupId}`;
 
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error("Failed to fetch gifts");
-    }
-    const gifts = await response.json();
-    return gifts.map((gift: Gift) => ({
-      ...gift,
-      recipient: gift.recipient,
-    }));
-  } catch (error) {
-    console.error("Error fetching gifts:", error);
-    return [];
-  }
-};
+//     const response = await fetch(url);
+//     if (!response.ok) {
+//       throw new Error("Failed to fetch gifts");
+//     }
+//     const gifts = await response.json();
+//     return gifts.map((gift: Gift) => ({
+//       ...gift,
+//       recipient: gift.recipient,
+//     }));
+//   } catch (error) {
+//     console.error("Error fetching gifts:", error);
+//     return [];
+//   }
+// };
 
 export default function App() {
   const router = useRouter();
   // const [isLoading, setIsLoading] = useState(false);
-  const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
+  // const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
   const [view] = useState<"join" | "create" | "main">("join");
   const [inviteCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -66,6 +66,7 @@ export default function App() {
       }
 
       setIsValidInviteCode(true);
+      setSuccessMessage("Code d'invitation valide");
 
       // Redirect to the group page
       const data = await response.json();

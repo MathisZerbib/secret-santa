@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import GiftForm from "./GiftForm";
 import GiftList from "./GiftList";
 import FilterInput from "./FilterInput";
-import ThemesMenu from "./ThemeMenu";
+// import ThemesMenu from "./ThemeMenu";
 import { Recipient } from "@prisma/client";
 import React from "react";
 import { Gift } from "@/types/gift";
