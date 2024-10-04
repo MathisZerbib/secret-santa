@@ -3,9 +3,9 @@
 import "../app/globals.css";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import MainContent from "../components/MainContent";
+// import MainContent from "../components/MainContent";
 import InviteForm from "../components/InviteForm";
-import { Gift } from "../types/gift";
+// import { Gift } from "../types/gift";
 import {
   Card,
   CardHeader,
