@@ -29,30 +29,15 @@ const Dashboard = () => {
     const fetchGroups = async () => {
       const session = await getSession();
       if (!session) {
-        return (
-          <div className="flex justify-center items-center min-h-screen">
-            <p className="text-white text-2xl">
-              Please login to view this page
-            </p>
-            <Link href="/api/auth/signin" passHref>
-              <Button className="text-white">Login</Button>
-            </Link>
-          </div>
-        );
+        router.push("/api/auth/signin");
+        return;
       }
+
       if (session.user && session.user.name) {
         setUser({ name: session.user.name });
       } else {
-        return (
-          <div className="flex justify-center items-center min-h-screen">
-            <p className="text-white text-2xl">
-              Please login to view this page
-            </p>
-            <Link href="/api/auth/signin" passHref>
-              <Button className="text-white">Login</Button>
-            </Link>
-          </div>
-        );
+        router.push("/api/auth/signin");
+        return;
       }
 
       try {
@@ -152,7 +137,6 @@ const Dashboard = () => {
       </div>
     );
   }
-  /// return go to login if not logged in
 
   if (!user) {
     return (

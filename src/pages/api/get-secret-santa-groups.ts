@@ -1,27 +1,23 @@
-// pages/api/get-secret-santa-groups.ts
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 
-export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse
-) {
-    const session = await getSession({ req });
-
-    if (!session) {
-        return res.status(401).json({ error: "Unauthorized" });
-    }
-
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
         try {
+            const session = await getSession({ req });
+
+            if (!session) {
+                return res.status(401).json({ error: "Unauthorized" });
+            }
+
+            const email = session.user?.email!;
+
             const groups = await prisma.secretSantaGroup.findMany({
                 where: {
-                    manager: {
-                        email: session.user?.email || "",
-                    },
+                    manager: { email: email },
                 },
                 select: {
                     inviteCode: true,
