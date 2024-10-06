@@ -1,7 +1,6 @@
 import Stripe from 'stripe';
 import prisma
   from '../../../../prisma/prisma';
-import { getSession } from 'next-auth/react';
 
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
