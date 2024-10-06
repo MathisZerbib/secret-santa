@@ -68,7 +68,6 @@ const Dashboard = () => {
       fetchGroups();
     }
   }, [status, session, toast]);
-
   const handleCreateGroup = async (name: string, managerEmail: string) => {
     try {
       const res = await fetch("/api/group/create", {
@@ -78,9 +77,13 @@ const Dashboard = () => {
         },
         body: JSON.stringify({ name, managerEmail }),
       });
+      await res.json();
 
-      const newGroup = await res.json();
-      setGroups((prevGroups) => [...prevGroups, newGroup]);
+      // Fetch all groups again to get the latest data
+      const groupsRes = await fetch("/api/get-secret-santa-groups");
+      const updatedGroups = await groupsRes.json();
+      setGroups(updatedGroups);
+
       setShowCreateForm(false);
       toast({
         title: "Succès",
@@ -192,48 +195,50 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {groups &&
               groups.length > 0 &&
-              groups.map((group: SecretSantaGroup) => (
-                <div
-                  key={group.inviteCode}
-                  className="p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 bg-white bg-opacity-20 relative"
-                >
-                  <div className="font-bold text-xl lg:text-2xl mb-2 text-center text-white">
-                    {group.name}
-                  </div>
-                  <div className="text-lg text-center text-white mb-2">
-                    Code d&rsquo;invitation: {group.inviteCode}
-                    <Button
-                      onClick={() => copyToClipboard(group.inviteCode)}
-                      className="ml-2 p-2 bg-transparent text-white hover:bg-white hover:text-black rounded-full"
+              groups.map((group: SecretSantaGroup) =>
+                group.id && group.inviteCode && group.name ? (
+                  <div
+                    key={group.inviteCode}
+                    className="p-8 rounded-xl shadow-lg transition-transform transform hover:scale-105 bg-white bg-opacity-20 relative"
+                  >
+                    <div className="font-bold text-xl lg:text-2xl mb-2 text-center text-white">
+                      {group.name}
+                    </div>
+                    <div className="text-lg text-center text-white mb-2">
+                      Code d&rsquo;invitation: {group.inviteCode}
+                      <Button
+                        onClick={() => copyToClipboard(group.inviteCode)}
+                        className="ml-2 p-2 bg-transparent text-white hover:bg-white hover:text-black rounded-full"
+                      >
+                        <FaCopy />
+                      </Button>
+                    </div>
+                    <Link href={`/group/${group.id}`} passHref>
+                      <Button className="w-full mt-4 py-2 bg-white text-black rounded hover:bg-black hover:text-white transition-colors">
+                        Voir les cadeaux
+                      </Button>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        setGroupToRename(group);
+                        setShowRenameGroupForm(true);
+                      }}
+                      className="absolute top-4 left-4 text-white hover:text-yellow-500 focus:outline-none"
                     >
-                      <FaCopy />
-                    </Button>
+                      <FaEdit className="text-xl" />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setGroupToDelete(group);
+                        setShowDeleteDialog(true);
+                      }}
+                      className="absolute top-4 right-4 text-white hover:text-red-500 focus:outline-none"
+                    >
+                      <FaTrash className="text-xl" />
+                    </button>
                   </div>
-                  <Link href={`/group/${group.id}`} passHref>
-                    <Button className="w-full mt-4 py-2 bg-white text-black rounded hover:bg-black hover:text-white transition-colors">
-                      Voir les cadeaux
-                    </Button>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setGroupToRename(group);
-                      setShowRenameGroupForm(true);
-                    }}
-                    className="absolute top-4 left-4 text-white hover:text-yellow-500 focus:outline-none"
-                  >
-                    <FaEdit className="text-xl" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setGroupToDelete(group);
-                      setShowDeleteDialog(true);
-                    }}
-                    className="absolute top-4 right-4 text-white hover:text-red-500 focus:outline-none"
-                  >
-                    <FaTrash className="text-xl" />
-                  </button>
-                </div>
-              ))}
+                ) : null
+              )}
             <div
               className="p-4 lg:p-6 rounded-xl shadow-lg transition-transform transform hover:scale-105 cursor-pointer bg-white bg-opacity-20"
               onClick={() => setShowCreateForm(true)}

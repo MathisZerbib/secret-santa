@@ -10,13 +10,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             const session = await getSession({ req });
 
             if (!session) {
-                return res.status(401).json({ error: "Unauthorized" });
+                return res.status(401).json({ error: "Unauthorized Session" });
             }
 
             const email = session.user?.email;
 
             if (!email) {
-                return res.status(401).json({ error: "Unauthorized" });
+                return res.status(401).json({ error: "Unauthorized email" });
             }
 
             const groups = await prisma.secretSantaGroup.findMany({
