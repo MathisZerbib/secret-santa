@@ -90,9 +90,7 @@ export const SubscriptionCard = ({
         <div className="text-xl sm:text-2xl md:text-3xl mr-2 text-white">
           {price}
         </div>
-        <span className="text-base sm:text-lg md:text-xl text-white">
-          / annuel
-        </span>
+        <span className="text-base sm:text-lg md:text-xl text-white">/an</span>
       </div>
       <ul className="list-disc pl-4 text-white space-y-1 text-sm sm:text-base">
         {features.map((feature, index) => (

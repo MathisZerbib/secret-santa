@@ -33,9 +33,10 @@ function SubscriptionPage() {
       />
       <div className="flex flex-col items-center justify-center py-20">
         <div className="m-auto w-fit flex flex-col">
-          <h1 className="text-3xl font-bold text-center mb-8">
+          <h1 className="text-3xl font-bold text-center mb-20 sm:mb-10 md:mb-16 text-white">
             Choisissez votre plan
           </h1>
+
           <div className="grid lg:grid-cols-3 gap-10">
             {subscription &&
               subscription.map((sub, i) => (
@@ -49,6 +50,9 @@ function SubscriptionPage() {
           </div>
         </div>
       </div>
+      <p className="text-center text-white mb-8 italic">
+        Essai Gratuit de 14 jours. Vous pouvez annuler à tout moment.
+      </p>
     </div>
   );
 }
