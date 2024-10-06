@@ -22,7 +22,6 @@ export const authOptions: NextAuthOptions = {
 			session!.user!.stripeCustomerId = user.stripeCustomerId;
 			session!.user!.isActive = user.isActive;
 			session!.user!.subscriptionID = user.subscriptionID;
-			session.user!.stripeCustomerId = user.stripeCustomerId;
 			return session;
 		},
 	},

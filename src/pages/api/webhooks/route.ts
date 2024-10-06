@@ -40,6 +40,8 @@ const webhookHandler = async (req: NextRequest) => {
         // getting to the data we want from the event
         const subscription = event.data.object as Stripe.Subscription;
         const subscriptionId = subscription.id;
+        const checkoutSession = event.data.object as Stripe.Checkout.Session;
+
         console.log("Subscription ID:", subscriptionId);
         console.log("Subscription.customer :", subscription.customer);
 
@@ -48,6 +50,17 @@ const webhookHandler = async (req: NextRequest) => {
                 await prisma.user.update({
                     where: {
                         stripeCustomerId: subscription.customer as string,
+                    },
+                    data: {
+                        subscriptionID: subscriptionId,
+                    },
+                });
+                break;
+
+            case "checkout.session.completed":
+                await prisma.user.update({
+                    where: {
+                        stripeCustomerId: checkoutSession.customer as string,
                     },
                     data: {
                         isActive: true,
