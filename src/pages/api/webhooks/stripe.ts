@@ -1,14 +1,20 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import Stripe from "stripe";
-import { PrismaClient } from "@prisma/client";
-
+import Stripe from 'stripe';
+import prisma
+  from '../../../../prisma/prisma';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-09-30.acacia",
+  apiVersion: '2024-09-30.acacia',
 });
-const prisma = new PrismaClient();
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+if (!endpointSecret) {
+  throw new Error('Missing Stripe webhook secret');
+}
+
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -25,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       req.on("error", reject);
     });
 
-    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
+    event = stripe.webhooks.constructEvent(buf, sig, endpointSecret!);
   } catch (err) {
     if (err instanceof Error) {
       console.error("⚠️  Webhook signature verification failed.", err.message);
@@ -36,31 +42,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log("event type", event.type);
     switch (event.type) {
-      case "checkout.session.completed":
-        const session = event.data.object as Stripe.Checkout.Session;
-        const subscriptionId = session.subscription as string;
-
-        // Update user's subscription status in the database
+      case "invoice.payment_succeeded":
+        const invoice = event.data.object as Stripe.Invoice;
+        console.log(`💰 Invoice ${invoice.id} for customer ${invoice.customer} paid.`);
         await prisma.user.update({
-          where: { stripeCustomerId: session.customer as string },
-          data: {
-            isActive: true,
-            subscriptionID: subscriptionId,
-          },
+          where: { stripeCustomerId: invoice.customer as string },
+          data: { isActive: true },
         });
-        console.log(`✅ Subscription ${subscriptionId} for customer ${session.customer} completed.`);
-        break;
-
-      case "customer.subscription.updated":
-        const subscription = event.data.object as Stripe.Subscription;
-        if (subscription.cancel_at_period_end) {
-          await prisma.user.update({
-            where: { stripeCustomerId: subscription.customer as string },
-            data: { isActive: false, subscriptionID: subscription.id },
-          });
-          console.log(`⚠️ Subscription ${subscription.id} for customer ${subscription.customer} set to cancel at period end.`);
-        }
         break;
 
       case "customer.subscription.deleted":

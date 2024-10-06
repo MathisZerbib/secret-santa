@@ -22,9 +22,14 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 	}
 
 	try {
-		const successUrl = process.env.NEXT_PUBLIC_API_URL + "/success?session_id={CHECKOUT_SESSION_ID}";
-		const cancelUrl = process.env.NEXT_PUBLIC_API_URL;
+		const successUrl = process.env.NEXT_PUBLIC_API_URL + `/success?session_id={CHECKOUT_SESSION_ID}`;
+		const cancelUrl = process.env.NEXT_PUBLIC_API_URL + '/cancel';
 
+		console.log("successUrl", successUrl);
+		console.log("cancelUrl", cancelUrl);
+
+		console.log("session.user.stripeCustomerId", session.user.stripeCustomerId);
+		console.log("priceId", priceId);
 		if (!successUrl || !cancelUrl) {
 			throw new Error("Environment variables NEXT_PUBLIC_API_URL are not set");
 		}
