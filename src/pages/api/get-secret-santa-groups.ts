@@ -13,7 +13,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(401).json({ error: "Unauthorized" });
             }
 
-            const email = session.user?.email!;
+            const email = session.user?.email;
+
+            if (!email) {
+                return res.status(401).json({ error: "Unauthorized" });
+            }
 
             const groups = await prisma.secretSantaGroup.findMany({
                 where: {

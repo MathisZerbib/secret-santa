@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
-import { getSession } from "next-auth/react";
 
 const prisma = new PrismaClient();
 

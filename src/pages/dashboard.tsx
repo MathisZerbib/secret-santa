@@ -201,7 +201,7 @@ const Dashboard = () => {
                     {group.name}
                   </div>
                   <div className="text-lg text-center text-white mb-2">
-                    Code d'invitation: {group.inviteCode}
+                    Code d&rsquo;invitation: {group.inviteCode}
                     <Button
                       onClick={() => copyToClipboard(group.inviteCode)}
                       className="ml-2 p-2 bg-transparent text-white hover:bg-white hover:text-black rounded-full"
