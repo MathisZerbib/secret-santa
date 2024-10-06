@@ -2,7 +2,6 @@ import { getServerSession } from "next-auth";
 import { NextApiRequest, NextApiResponse } from "next";
 import { authOptions } from "../auth/[...nextauth]";
 import Stripe from "stripe";
-import prisma from "../../../../prisma/prisma";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	apiVersion: "2024-09-30.acacia",
@@ -23,26 +22,12 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 	}
 
 	try {
-		// const successUrl = process.env.NEXT_PUBLIC_API_URL + `?session_id={CHECKOUT_SESSION_ID}`;
-		const successUrl = process.env.NEXT_PUBLIC_API_URL + "/app"
+		const successUrl = process.env.NEXT_PUBLIC_API_URL + `?session_id={CHECKOUT_SESSION_ID}`;
 		const cancelUrl = process.env.NEXT_PUBLIC_API_URL;
 
 		if (!successUrl || !cancelUrl) {
 			throw new Error("Environment variables NEXT_PUBLIC_API_URL are not set");
 		}
-
-
-		// Debugging log to check the value of stripeCustomerId
-		if (!session.user.stripeCustomerId) {
-			return res.status(400).json({
-				error: {
-					code: "missing-customer-id",
-					message: "Stripe customer ID is missing.",
-				},
-			});
-		}
-
-
 
 		const checkoutSession = await stripe.checkout.sessions.create({
 			mode: "subscription",
@@ -71,13 +56,6 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse) {
 				},
 			});
 		}
-
-		await prisma.user.update({
-			where: { id: session.user.id },
-			data: {
-				isActive: true,
-			},
-		});
 
 		return res.status(200).json({ session: checkoutSession });
 	} catch (error) {

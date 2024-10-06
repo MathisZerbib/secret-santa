@@ -15,3 +15,8 @@ export const subscription = [
         priceId: "price_1Q58xEGWRVquvw5gYRY33RMc",
     },
 ];
+
+export const subscriptionDictionary = subscription.reduce((acc, plan) => {
+    acc[plan.priceId] = plan;
+    return acc;
+}, {} as Record<string, { planType: string; price: string; priceId: string }>);

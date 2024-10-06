@@ -2,21 +2,27 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "./ui/button";
-
+import { getSession } from "next-auth/react";
 const CancelSubscription: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
   const handleCancelSubscription = async () => {
+    /// use session
+    const session = await getSession();
+    const subscriptionId = session?.user?.subscriptionID;
     setIsLoading(true);
     try {
-      const res = await fetch("/api/stripe/subscription-cancel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        "/api/stripe/subscription-cancel?subscriptionId=" + subscriptionId,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Failed to cancel subscription");

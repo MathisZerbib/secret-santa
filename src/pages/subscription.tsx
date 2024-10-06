@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { subscription } from "../../constants";
 import { SubscriptionCard } from "../components/SubscriptionCard";
 import HeaderSession from "@/components/HeaderSession";
+import Loader from "@/components/ui/loader";
 
 function SubscriptionPage() {
   const { data: session, status } = useSession();
@@ -21,7 +22,7 @@ function SubscriptionPage() {
   };
 
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (
@@ -36,14 +37,15 @@ function SubscriptionPage() {
             Choisissez votre plan
           </h1>
           <div className="grid lg:grid-cols-3 gap-10">
-            {subscription.map((sub, i) => (
-              <SubscriptionCard
-                key={i}
-                planType={sub.planType}
-                price={sub.price}
-                priceId={sub.priceId}
-              />
-            ))}
+            {subscription &&
+              subscription.map((sub, i) => (
+                <SubscriptionCard
+                  key={i}
+                  planType={sub.planType}
+                  price={sub.price}
+                  priceId={sub.priceId}
+                />
+              ))}
           </div>
         </div>
       </div>

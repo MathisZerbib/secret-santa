@@ -2,15 +2,12 @@ import { FC } from "react";
 import { useSession } from "next-auth/react";
 import {
   Dialog,
-  DialogOverlay,
   DialogContent,
-  DialogTitle,
+  DialogTitle,  
   DialogDescription,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
 import CancelSubscription from "./CancelSubscription";
-import { Tooltip } from "./ui/tooltip";
-import { FaTimes } from "react-icons/fa";
+import { subscriptionDictionary } from "../../constants";
 
 interface ManageSubscriptionProps {
   isOpen: boolean;
@@ -41,7 +38,8 @@ const ManageSubscription: FC<ManageSubscriptionProps> = ({
   }
 
   const { user } = session;
-  const trialEndDate = user?.subscriptionID;
+  const subscriptionDetails =
+    subscriptionDictionary[user?.subscriptionID || ""];
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -64,14 +62,22 @@ const ManageSubscription: FC<ManageSubscriptionProps> = ({
           </div>
           <div className="flex items-center">
             <strong className="w-1/3 text-black">Plan :</strong>
-            <span className="text-black">{user?.subscriptionID || "N/A"}</span>
+            <span className="text-black">
+              {subscriptionDetails ? subscriptionDetails.planType : "N/A"}
+            </span>
           </div>
           <div className="flex items-center">
+            <strong className="w-1/3 text-black">Prix :</strong>
+            <span className="text-black">
+              {subscriptionDetails ? subscriptionDetails.price + " /an" : "N/A"}
+            </span>
+          </div>
+          {/* <div className="flex items-center">
             <strong className="w-1/3 text-black">
               Fin de l'essai gratuit :
             </strong>
-            <span className="text-black">{trialEndDate}</span>
-          </div>
+            <span className="text-black">{user?.trialEndDate || "N/A"}</span>
+          </div> */}
         </div>
         <CancelSubscription />
       </DialogContent>
