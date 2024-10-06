@@ -1,26 +1,28 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import Stripe from "stripe";
-import { PrismaClient } from "@prisma/client";
-import { buffer } from "micro";
-import Cors from "micro-cors";
+import Stripe from 'stripe';
+import prisma
+  from '../../../../prisma/prisma';
+import { getSession } from 'next-auth/react';
+
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-09-30.acacia",
-});
-const prisma = new PrismaClient();
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-
-const cors = Cors({
-  allowMethods: ["POST", "HEAD"],
+  apiVersion: '2024-09-30.acacia',
 });
 
 export const config = {
   api: {
     bodyParser: false,
+    externalResolver: true,
   },
 };
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+if (!endpointSecret) {
+  throw new Error('Missing Stripe webhook secret');
+}
+
+import { NextApiRequest, NextApiResponse } from 'next';
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -30,24 +32,71 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   let event: Stripe.Event;
 
   try {
-    const buf = await buffer(req);
-    event = stripe.webhooks.constructEvent(buf, sig, webhookSecret);
+    const buf = await new Promise<Buffer>((resolve, reject) => {
+      const chunks: Buffer[] = [];
+      req.on("data", (chunk) => chunks.push(chunk));
+      req.on("end", () => resolve(Buffer.concat(chunks)));
+      req.on("error", reject);
+    });
+
+    event = stripe.webhooks.constructEvent(buf, sig, endpointSecret!);
   } catch (err) {
-    console.error("⚠️  Webhook signature verification failed.", (err as Error).message);
+    if (err instanceof Error) {
+      console.error("⚠️  Webhook signature verification failed.", err.message);
+    } else {
+      console.error("⚠️  Webhook signature verification failed.", err);
+    }
     return res.status(400).json({ error: "Webhook error" });
   }
 
-  console.log(`Received event: ${event.type}`);
+  // Return a 200 response immediately
+  res.status(200).json({ received: true });
 
+  // Process the event asynchronously
+  handleWebhookEvent(event).catch(console.error);
+}
+async function handleWebhookEvent(event: Stripe.Event) {
   try {
     switch (event.type) {
       case "invoice.payment_succeeded":
         const invoice = event.data.object as Stripe.Invoice;
         console.log(`💰 Invoice ${invoice.id} for customer ${invoice.customer} paid.`);
-        await prisma.user.update({
+
+        // Update the user
+        const updatedUser = await prisma.user.update({
           where: { stripeCustomerId: invoice.customer as string },
-          data: { isActive: true },
+          data: { isActive: true, subscriptionID: invoice.subscription as string },
         });
+
+        if (!updatedUser) {
+          console.error(`User not found for customer ${invoice.customer}`);
+          return;
+        }
+
+        // Check if an AppManager already exists for this user
+        let appManager = await prisma.appManager.findUnique({
+          where: { email: updatedUser.email! },
+        });
+
+        if (!appManager) {
+          // Create a new AppManager
+          appManager = await prisma.appManager.create({
+            data: {
+              email: updatedUser.email!,
+              token: generateUniqueToken(), // You need to implement this function
+              hasPaid: true,
+            },
+          });
+          console.log(`Created new AppManager for ${updatedUser.email}`);
+        } else {
+          // Update existing AppManager
+          appManager = await prisma.appManager.update({
+            where: { email: updatedUser.email! },
+            data: { hasPaid: true },
+          });
+          console.log(`Updated AppManager for ${updatedUser.email}`);
+        }
+
         break;
 
       case "customer.subscription.deleted":
@@ -57,17 +106,27 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           data: { isActive: false, subscriptionID: null },
         });
         console.log(`❌ Subscription ${deletedSubscription.id} for customer ${deletedSubscription.customer} deleted.`);
+
+        // Optionally, update AppManager here if needed
+        // For example, set hasPaid to false
+        await prisma.appManager.updateMany({
+          where: { email: deletedSubscription.customer as string },
+          data: { hasPaid: false },
+        });
+
         break;
 
       default:
-        console.log(`Unhandled event type: ${event.type}`);
+        console.warn(`Unhandled event type ${event.type}`);
     }
-
-    res.json({ received: true });
   } catch (err) {
-    console.error("⚠️  Error handling event.", (err as Error).message);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("⚠️  Error handling event.", err);
   }
-};
+}
 
-export default cors(handler);
+// Helper function to generate a unique token
+function generateUniqueToken(): string {
+  // Implement your token generation logic here
+  // For example, you could use a library like `uuid` or create your own algorithm
+  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+}
