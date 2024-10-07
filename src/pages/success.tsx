@@ -13,7 +13,7 @@ export default function Success() {
         </h1>
         <p className="text-lg mb-8 text-white">
           Nous vous avons envoyé un email avec les détails de votre inscription
-          ainsi que les informations de connexion au features admin
+          ainsi que les informations de connexion.
         </p>
         <button
           onClick={() => router.push("/dashboard")}
