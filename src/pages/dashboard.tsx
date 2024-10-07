@@ -88,6 +88,7 @@ const Dashboard = () => {
       const groupsRes = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/api/get-secret-santa-groups`
       );
+
       const updatedGroups = await groupsRes.json();
       setGroups(updatedGroups);
 

@@ -131,7 +131,7 @@ const GiftForm: React.FC<GiftFormProps> = ({
   return (
     <div className="space-y-6 mb-4 p-4 rounded-lg shadow-lg">
       {error && <div className="text-red-500 text-sm">{error}</div>}
-      <h2 className="text-xl font-semibold text-white">Ajouter un cadeau</h2>
+
       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 text-white">
         <Input
           type="text"
