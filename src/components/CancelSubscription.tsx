@@ -15,7 +15,8 @@ const CancelSubscription: React.FC = () => {
     setIsLoading(true);
     try {
       const res = await fetch(
-        "/api/stripe/subscription-cancel?subscriptionId=" + subscriptionId,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stripe/subscription-cancel?subscriptionId=` +
+          subscriptionId,
         {
           method: "GET",
           headers: {

@@ -11,13 +11,16 @@ export const SubscriptionCard = ({
 }) => {
   const handleCreateCheckoutSession = async (priceId: string) => {
     try {
-      const res = await fetch("/api/stripe/checkout-session", {
-        method: "POST",
-        body: JSON.stringify({ priceId }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/stripe/checkout-session`,
+        {
+          method: "POST",
+          body: JSON.stringify({ priceId }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!res.ok) {
         throw new Error("Échec de la création de la session de paiement");

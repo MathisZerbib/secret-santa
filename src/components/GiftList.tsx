@@ -77,7 +77,7 @@ function GiftList({
   const handleConfirmDelete = async () => {
     if (deleteGiftId !== null) {
       try {
-        await fetch(`/api/gifts/delete`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/gifts/delete`, {
           method: "DELETE",
           body: JSON.stringify({ id: deleteGiftId }),
           headers: { "Content-Type": "application/json" },

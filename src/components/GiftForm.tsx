@@ -44,7 +44,9 @@ const GiftForm: React.FC<GiftFormProps> = ({
   const fetchAllRecipients = async () => {
     setLoading(true);
     try {
-      const response = await fetch("/api/recipients/get");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/recipients/get`
+      );
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       setRecipients(
@@ -73,17 +75,20 @@ const GiftForm: React.FC<GiftFormProps> = ({
   const handleAddNewRecipient = async () => {
     if (newRecipientName && newRecipientEmail) {
       try {
-        const response = await fetch("/api/recipients/add", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: newRecipientName,
-            email: newRecipientEmail,
-            secretSantaGroupId,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/recipients/add`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: newRecipientName,
+              email: newRecipientEmail,
+              secretSantaGroupId,
+            }),
+          }
+        );
         if (!response.ok) throw new Error("Failed to add new recipient");
         const newRecipient = await response.json();
         setRecipients((prev) => [...prev, newRecipient]);

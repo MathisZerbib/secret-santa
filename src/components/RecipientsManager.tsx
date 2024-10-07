@@ -33,7 +33,9 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
   const fetchRecipients = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/recipients/get");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/recipients/get`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch recipients");
       }
@@ -50,9 +52,12 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
 
   const handleDeleteRecipient = async (id: number) => {
     try {
-      const response = await fetch(`/api/recipients/${id}/delete`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/recipients/${id}/delete`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to delete recipient");

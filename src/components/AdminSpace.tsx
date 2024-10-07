@@ -45,13 +45,16 @@ const AdminSpace: React.FC<AdminSpaceProps> = ({
     setIsLoading(true);
     setError("");
     try {
-      const response = await fetch("/api/manager/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token: password }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/manager/auth`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: password }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Invalid token");

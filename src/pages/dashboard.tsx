@@ -47,7 +47,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchGroups = async () => {
       try {
-        const res = await fetch("/api/get-secret-santa-groups");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/get-secret-santa-groups`
+        );
         const data = await res.json();
         setGroups(data);
       } catch (error) {
@@ -70,17 +72,22 @@ const Dashboard = () => {
   }, [status, session, toast]);
   const handleCreateGroup = async (name: string, managerEmail: string) => {
     try {
-      const res = await fetch("/api/group/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, managerEmail }),
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/group/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name, managerEmail }),
+        }
+      );
       await res.json();
 
       // Fetch all groups again to get the latest data
-      const groupsRes = await fetch("/api/get-secret-santa-groups");
+      const groupsRes = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/get-secret-santa-groups`
+      );
       const updatedGroups = await groupsRes.json();
       setGroups(updatedGroups);
 
@@ -102,9 +109,12 @@ const Dashboard = () => {
     if (!groupToDelete) return;
 
     try {
-      await fetch(`/api/group/delete?id=${groupToDelete.id}`, {
-        method: "DELETE",
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/group/delete?id=${groupToDelete.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       setGroups((prevGroups) =>
         prevGroups.filter((group) => group.id !== groupToDelete.id)
@@ -125,13 +135,16 @@ const Dashboard = () => {
 
   const handleRenameGroup = async (id: number, newName: string) => {
     try {
-      await fetch(`/api/group/rename?id=${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name: newName }),
-      });
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/group/rename?id=${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: newName }),
+        }
+      );
 
       setGroups((prevGroups) =>
         prevGroups.map((group) =>
