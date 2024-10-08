@@ -181,7 +181,6 @@ function MainContent({ initialGifts }: MainContentProps) {
           userName={session?.user?.name ?? "Guest"}
           isManager={isManager}
           onLogout={() => signOut()}
-          secretSantaGroupId={secretSantaGroupId}
         />
       )}
       <motion.div

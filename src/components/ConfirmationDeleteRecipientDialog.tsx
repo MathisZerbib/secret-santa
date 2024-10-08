@@ -22,18 +22,19 @@ const ConfirmationDeleteRecipientDialog: React.FC<
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogTitle className="text-black">
+            Confirmer la suppression
+          </DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete this recipient? This action cannot
-            be undone.
+            Êtes-vous sûr de vouloir supprimer ce participant ?
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
-            Cancel
+          <Button variant="outline" className="text-black" onClick={onClose}>
+            Retour
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
-            Delete
+            Supprimer
           </Button>
         </DialogFooter>
       </DialogContent>
