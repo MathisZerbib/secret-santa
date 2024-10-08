@@ -3,18 +3,20 @@ import { useRouter } from "next/router";
 import GiftForm from "./GiftForm";
 import GiftList from "./GiftList";
 import FilterInput from "./FilterInput";
-// import ThemesMenu from "./ThemeMenu";
-import { Recipient } from "@prisma/client";
 import React from "react";
 import { Gift } from "@/types/gift";
-import AdminSpace from "./AdminSpace";
 import { motion } from "framer-motion";
+import HeaderSession from "./HeaderSession";
+import { getSession, signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
 interface MainContentProps {
   initialGifts: Gift[];
 }
 
 function MainContent({ initialGifts }: MainContentProps) {
+  const [isManager, setIsManager] = useState(false);
+  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
   const [gifts, setGifts] = useState(initialGifts);
   const [filter, setFilter] = useState("");
@@ -27,35 +29,46 @@ function MainContent({ initialGifts }: MainContentProps) {
     if (typeof id === "string") {
       setSecretSantaGroupId(Number(id));
     }
-  }, [router.query, setSecretSantaGroupId]);
+  }, [router.query]);
 
-  // const setBackgroundImage = (image: string) => {
-  //   document.body.style.backgroundImage = `url(${image})`;
-  //   localStorage.setItem("selectedTheme", image);
-  // };
+  // Fetch session and check if the logged-in user is the AppManager
+  useEffect(() => {
+    const fetchSessionAndCheckManager = async () => {
+      const session = await getSession();
+      setSession(session);
 
-  const handleAddRecipient = async (recipient: Recipient) => {
-    try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/recipients/add`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...recipient, secretSantaGroupId }),
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/api/check-manager`
       );
-      if (!response.ok) {
-        throw new Error("Failed to add recipient");
+      const data = await response.json();
+      if (data.isManager) {
+        setIsManager(true);
       }
-      const newRecipient = await response.json();
-      console.log("New recipient added:", newRecipient);
-    } catch (error) {
-      console.error("Error adding recipient:", error);
-      throw error;
-    }
-  };
+    };
+    fetchSessionAndCheckManager();
+  }, []);
+
+  // Polling to fetch updates periodically
+  useEffect(() => {
+    const fetchGifts = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/gifts?groupId=${secretSantaGroupId}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch gifts");
+        }
+        const updatedGifts = await response.json();
+        setGifts(updatedGifts);
+      } catch (error) {
+        console.error("Error fetching gifts:", error);
+      }
+    };
+
+    const intervalId = setInterval(fetchGifts, 5000); // Poll every 5 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, [secretSantaGroupId]);
 
   // Add a new gift to the list
   const addGift = async (
@@ -157,34 +170,20 @@ function MainContent({ initialGifts }: MainContentProps) {
     setGifts((prevGifts) => prevGifts.filter((gift) => gift.id !== id));
   };
 
-  const organizeSecretSanta = async (email: string, token: string) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/secret-santa/organize`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, token }),
-        }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to organize Secret Santa");
-      }
-      alert("Secret Santa organized successfully!");
-    } catch (error) {
-      console.error("Error organizing Secret Santa:", error);
-      throw error;
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {isManager && session && (
+        <HeaderSession
+          userName={session?.user?.name ?? "Guest"}
+          isManager={isManager}
+          onLogout={() => signOut()}
+          secretSantaGroupId={secretSantaGroupId}
+        />
+      )}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -192,12 +191,6 @@ function MainContent({ initialGifts }: MainContentProps) {
         className="absolute top-4 right-4 z-50"
       >
         {/* <ThemesMenu setBackgroundImage={setBackgroundImage} /> */}
-        <div className="relative z-50">
-          <AdminSpace
-            onAddRecipient={handleAddRecipient}
-            onOrganizeSecretSanta={organizeSecretSanta}
-          />
-        </div>
       </motion.div>
       <br />
       <motion.div

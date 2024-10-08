@@ -114,6 +114,11 @@ const GiftForm: React.FC<GiftFormProps> = ({
       recipientEmail.trim() !== "" &&
       recipientName.trim() !== ""
     ) {
+      setError("");
+      if (giftLink.trim() !== "" && !giftLink.startsWith("https://")) {
+        setError("le lien doit commencer par https://");
+        return;
+      }
       onAddGift(giftName, recipientName, recipientEmail, giftLink);
       resetForm();
     }
@@ -130,7 +135,11 @@ const GiftForm: React.FC<GiftFormProps> = ({
 
   return (
     <div className="space-y-6 mb-4 p-4 rounded-lg shadow-lg">
-      {error && <div className="text-red-500 text-sm">{error}</div>}
+      {error && (
+        <div className="bg-red-500 text-white p-2 rounded-md text-center">
+          {error}
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 text-white">
         <Input
@@ -154,6 +163,7 @@ const GiftForm: React.FC<GiftFormProps> = ({
           type="text"
           value={giftLink}
           onChange={(e) => setGiftLink(e.target.value)}
+          // only https:// links are allowed
           placeholder="Lien vers l'article (optionnel)"
           className="placeholder:text-white"
         />
@@ -184,11 +194,13 @@ const GiftForm: React.FC<GiftFormProps> = ({
                 </div>
               ))
             ) : (
-              <div>Aucun destinataire trouvé</div>
+              <p className="text-center text-black">
+                Aucun destinataire trouvé
+              </p>
             )}
           </ScrollArea>
           <div className="mt-4">
-            <h3 className="text-lg font-semibold mb-2 text-white">
+            <h3 className="text-lg font-semibold mb-2 text-black">
               Ajouter un nouveau destinataire
             </h3>
             <Input
@@ -196,14 +208,14 @@ const GiftForm: React.FC<GiftFormProps> = ({
               value={newRecipientName}
               onChange={(e) => setNewRecipientName(e.target.value)}
               placeholder="Nom du destinataire"
-              className="mb-2 text-white"
+              className="mb-2 text-black"
             />
             <Input
               type="email"
               value={newRecipientEmail}
               onChange={(e) => setNewRecipientEmail(e.target.value)}
               placeholder="Email du destinataire"
-              className="text-white"
+              className="text-black"
             />
           </div>
           <DialogFooter>

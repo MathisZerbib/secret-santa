@@ -15,7 +15,6 @@ export default async function handler(
     }
 
     try {
-      console.log("groupId", groupId);
       // Check if the group exists
       const group = await prisma.secretSantaGroup.findUnique({
         where: {
