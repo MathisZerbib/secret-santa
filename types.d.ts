@@ -7,11 +7,13 @@ declare module "next-auth" {
 			stripeCustomerId: string;
 			isActive: boolean;
 			subscriptionID: string;
+			googleId: string;
 		};
 	}
 	interface User extends DefaultUser {
 		stripeCustomerId: string;
 		isActive: boolean;
 		subscriptionID: string;
+		googleId: string;
 	}
 }

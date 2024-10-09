@@ -58,16 +58,20 @@ model Session {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  name             String?   @db.VarChar(100)
-  email            String?   @unique @db.VarChar(255)
+  id               String      @id @default(cuid())
+  name             String?     @db.VarChar(100)
+  email            String?     @unique @db.VarChar(255)
   emailVerified    DateTime?
   image            String?
-  stripeCustomerId String?   @unique
-  isActive         Boolean   @default(false)
+  stripeCustomerId String?     @unique
+  isActive         Boolean     @default(false)
   subscriptionID   String?
   accounts         Account[]
   sessions         Session[]
+  googleId         String?     @unique
+  appManager       AppManager? @relation(fields: [appManagerId], references: [id])
+
+  appManagerId Int?
 }
 
 model VerificationToken {
@@ -95,4 +99,5 @@ model AppManager {
   token            String             @unique
   hasPaid          Boolean            @default(false)
   SecretSantaGroup SecretSantaGroup[]
+  User             User[]
 }
