@@ -8,7 +8,7 @@ import HeaderSession from "@/components/HeaderSession";
 import Loader from "@/components/ui/loader";
 
 function SubscriptionPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
