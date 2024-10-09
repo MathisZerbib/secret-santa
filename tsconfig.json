@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/GiftList.ttsx", "src/pages/api/group/@", "src/pages/api/create-payment-intent.ts.old"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/GiftList.ttsx", "src/pages/api/group/@",],
   "exclude": ["node_modules"]
 }

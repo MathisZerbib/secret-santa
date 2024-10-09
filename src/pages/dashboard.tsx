@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { SecretSantaGroup } from "@prisma/client";
 import CreateGroupForm from "../components/CreateGroupForm";
 import { Button } from "../components/ui/button";
@@ -167,19 +167,6 @@ const Dashboard = () => {
     });
   };
 
-  const handleLogout = async () => {
-    try {
-      await signOut({ callbackUrl: "/app" });
-      router.push("/app");
-    } catch (error) {
-      console.error("Erreur lors de la déconnexion:", error);
-      toast({
-        title: "Erreur",
-        description: "Échec de la déconnexion.",
-      });
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -200,7 +187,7 @@ const Dashboard = () => {
 
   return (
     <div className="relative flex flex-col min-h-screen">
-      <HeaderSession userName={user?.name || ""} onLogout={handleLogout} />
+      <HeaderSession />
       <div className="flex-grow flex justify-center items-start py-16 lg:py-12 px-6">
         <div className="flex flex-col justify-center mx-auto p-4 lg:p-8 backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden max-w-6xl w-full">
           <h1 className="text-3xl lg:text-4xl font-bold mb-4 lg:mb-8 text-center text-white">

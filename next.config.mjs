@@ -6,6 +6,7 @@ const nextConfig = {
       "localhost",
       "https://patrac-sanchez-santa-wishlist.vercel.app",
       "https://secret-santa-wishlist.vercel.app",
+      "https://lh3.googleusercontent.com",
     ],
   },
 

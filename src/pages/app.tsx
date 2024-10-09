@@ -3,44 +3,19 @@
 import "../app/globals.css";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-// import MainContent from "../components/MainContent";
 import InviteForm from "../components/InviteForm";
-// import { Gift } from "../types/gift";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
 } from "../components/ui/card";
-// import Loader from "@/components/ui/loader";
-// import { Button } from "@/components/ui/button";
-// import { ShaderGradientCanvas, ShaderGradient } from "shadergradient";
+
 import Provider from "@/components/provider";
 import LoginBtn from "@/components/LoginBtn";
 
-// const getGifts = async (groupId?: string): Promise<Gift[]> => {
-//   try {
-//     const url = `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${groupId}`;
-
-//     const response = await fetch(url);
-//     if (!response.ok) {
-//       throw new Error("Failed to fetch gifts");
-//     }
-//     const gifts = await response.json();
-//     return gifts.map((gift: Gift) => ({
-//       ...gift,
-//       recipient: gift.recipient,
-//     }));
-//   } catch (error) {
-//     console.error("Error fetching gifts:", error);
-//     return [];
-//   }
-// };
-
 function App() {
   const router = useRouter();
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [initialGifts, setInitialGifts] = useState<Gift[]>([]);
   const [view] = useState<"join" | "create" | "main">("join");
   const [inviteCode] = useState("");
   const [successMessage, setSuccessMessage] = useState("");

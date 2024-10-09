@@ -6,17 +6,12 @@ import FilterInput from "./FilterInput";
 import React from "react";
 import { Gift } from "@/types/gift";
 import { motion } from "framer-motion";
-import HeaderSession from "./HeaderSession";
-import { getSession, signOut } from "next-auth/react";
-import { Session } from "next-auth";
 
 interface MainContentProps {
   initialGifts: Gift[];
 }
 
 function MainContent({ initialGifts }: MainContentProps) {
-  const [isManager, setIsManager] = useState(false);
-  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
   const [gifts, setGifts] = useState(initialGifts);
   const [filter, setFilter] = useState("");
@@ -31,29 +26,12 @@ function MainContent({ initialGifts }: MainContentProps) {
     }
   }, [router.query]);
 
-  // Fetch session and check if the logged-in user is the AppManager
-  useEffect(() => {
-    const fetchSessionAndCheckManager = async () => {
-      const session = await getSession();
-      setSession(session);
-
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/check-manager`
-      );
-      const data = await response.json();
-      if (data.isManager) {
-        setIsManager(true);
-      }
-    };
-    fetchSessionAndCheckManager();
-  }, []);
-
   // Polling to fetch updates periodically
   useEffect(() => {
     const fetchGifts = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/gifts?groupId=${secretSantaGroupId}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/gifts/get?groupId=${secretSantaGroupId}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch gifts");
@@ -65,7 +43,7 @@ function MainContent({ initialGifts }: MainContentProps) {
       }
     };
 
-    const intervalId = setInterval(fetchGifts, 5000); // Poll every 5 seconds
+    const intervalId = setInterval(fetchGifts, 10000); // Poll every 10 seconds
 
     return () => clearInterval(intervalId); // Cleanup on unmount
   }, [secretSantaGroupId]);
@@ -176,13 +154,6 @@ function MainContent({ initialGifts }: MainContentProps) {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      {isManager && session && (
-        <HeaderSession
-          userName={session?.user?.name ?? "Guest"}
-          isManager={isManager}
-          onLogout={() => signOut()}
-        />
-      )}
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -191,12 +162,11 @@ function MainContent({ initialGifts }: MainContentProps) {
       >
         {/* <ThemesMenu setBackgroundImage={setBackgroundImage} /> */}
       </motion.div>
-      <br />
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.5 }}
-        className="max-w-2xl mx-auto p-6 rounded-lg shadow-md mt-16 sm:mt-8"
+        className="max-w-2xl mx-auto p-6 rounded-lg shadow-md mt-2"
       >
         <h2 className="text-xl font-semibold text-white">
           Ajouter votre souhait de cadeau

@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import MainContent from "../../components/MainContent";
 import Loader from "../../components/ui/loader";
 import { Gift } from "../../types/gift";
+import HeaderSession from "@/components/HeaderSession";
+import { useSession } from "next-auth/react";
+import HeaderGuest from "@/components/HeaderGuest";
 
 const checkGroupExists = async (groupId: string): Promise<boolean> => {
   try {
@@ -47,6 +50,7 @@ const GroupPage = () => {
   const { id } = router.query;
   const [isLoading, setIsLoading] = useState(true);
   const [gifts, setGifts] = useState<Gift[]>([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     if (id) {
@@ -75,11 +79,15 @@ const GroupPage = () => {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
-        <div className="mx-auto max-w-2xl w-full">
-          <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">
-            <MainContent initialGifts={gifts} />
+    <div>
+      {session ? <HeaderSession /> : <HeaderGuest />}
+
+      <div className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0 z-10 flex items-center justify-center p-4">
+          <div className="mx-auto max-w-2xl w-full">
+            <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden">
+              <MainContent initialGifts={gifts} />
+            </div>
           </div>
         </div>
       </div>

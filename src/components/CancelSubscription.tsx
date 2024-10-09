@@ -3,13 +3,13 @@ import { useRouter } from "next/router";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "./ui/button";
 import { getSession } from "next-auth/react";
+
 const CancelSubscription: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
 
   const handleCancelSubscription = async () => {
-    /// use session
     const session = await getSession();
     const subscriptionId = session?.user?.subscriptionID;
     setIsLoading(true);
@@ -51,14 +51,26 @@ const CancelSubscription: React.FC = () => {
     }
   };
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
   return (
-    <Button
-      onClick={handleCancelSubscription}
-      className="bg-red-500 text-white hover:bg-red-600"
-      disabled={isLoading}
-    >
-      {isLoading ? "Annulation en cours..." : "Annuler mon abonement"}
-    </Button>
+    <div className="flex flex-row space-x-4">
+      <Button
+        onClick={handleCancelSubscription}
+        className="bg-red-500 text-white hover:bg-red-600"
+        disabled={isLoading}
+      >
+        {isLoading ? "Annulation en cours..." : "Annuler mon abonnement"}
+      </Button>
+      <Button
+        onClick={handleGoBack}
+        className="bg-gray-500 text-white hover:bg-gray-600"
+      >
+        Retour
+      </Button>
+    </div>
   );
 };
 

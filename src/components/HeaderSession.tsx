@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -7,77 +7,65 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import ManageSubscription from "@/components/ManageSubscription";
-// import { Recipient } from "@prisma/client";
-import { Button } from "./ui/button";
 import { useRouter } from "next/router";
-interface HeaderSessionProps {
-  userName: string;
-  userImage?: string;
-  isManager?: boolean;
-  onLogout: () => void;
-}
+import { useSession, signOut } from "next-auth/react"; // Import useSession and signOut
+import { FaArrowLeft } from "react-icons/fa";
 
-const HeaderSession: FC<HeaderSessionProps> = ({
-  userName,
-  userImage,
-  isManager,
-  // secretSantaGroupId,
-  onLogout,
-}) => {
+const HeaderSession: FC = () => {
+  const { data: session } = useSession(); // Use useSession to get session data
   const [isManageSubscriptionOpen, setIsManageSubscriptionOpen] =
     useState(false);
+  const [isManager, setIsManager] = useState(false);
   const router = useRouter();
   const openManageSubscription = () => setIsManageSubscriptionOpen(true);
   const closeManageSubscription = () => setIsManageSubscriptionOpen(false);
 
-  // const handleAddRecipient = async (recipient: Recipient) => {
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/api/recipients/add`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ ...recipient, secretSantaGroupId }),
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error("Failed to add recipient");
-  //     }
-  //     const newRecipient = await response.json();
-  //     console.log("New recipient added:", newRecipient);
-  //   } catch (error) {
-  //     console.error("Error adding recipient:", error);
-  //     throw error;
-  //   }
-  // };
+  useEffect(() => {
+    const checkIfManager = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/check-manager`
+      );
+      const data = await response.json();
+      setIsManager(data.isManager);
+    };
+    if (session) {
+      checkIfManager();
+      console.log(session?.user?.image);
+    }
+  }, [session]);
 
-  // const organizeSecretSanta = async (email: string, token: string) => {
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/api/secret-santa/organize`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ email, token }),
-  //       }
-  //     );
-  //     if (!response.ok) {
-  //       throw new Error("Failed to organize Secret Santa");
-  //     }
-  //     alert("Secret Santa organized successfully!");
-  //   } catch (error) {
-  //     console.error("Error organizing Secret Santa:", error);
-  //     throw error;
-  //   }
-  // };
+  const goBack = (from: string) => {
+    switch (from) {
+      case "admin":
+        router.push("/admin");
+        break;
+
+      case "group":
+        router.push("/dashboard");
+        break;
+
+      default:
+        router.push("/app");
+        break;
+    }
+  };
+
+  const userName = session?.user?.name || "User";
+  const userImage = session?.user?.image || "/santa-og-1.png";
 
   return (
     <header className="flex flex-col justify-center mx-auto p-8 backdrop-blur-md bg-white bg-opacity-10 shadow-xl overflow-hidden w-full">
       <div className="container mx-auto flex justify-between items-center">
+        {/* Back Button */}
+        <button
+          onClick={() => {
+            goBack(router.pathname.split("/")[1]);
+          }}
+          className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
+        >
+          <FaArrowLeft className=" text-white" />
+        </button>
+
         {/* Logo */}
         <div className="text-2xl font-bold">Secret Santa</div>
 
@@ -119,20 +107,23 @@ const HeaderSession: FC<HeaderSessionProps> = ({
             >
               Abonnement
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              {isManager && (
-                <Button
-                  onClick={() => {
-                    // Navigate to admin
-                    router.push("/admin");
-                  }}
-                >
-                  Admin
-                </Button>
-              )}
-            </DropdownMenuItem>
+            {isManager && (
+              <DropdownMenuItem
+                onClick={() => {
+                  // Navigate to admin
+                  router.push("/admin");
+                }}
+                className="cursor-pointer"
+              >
+                Espace Admin
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem
-              onClick={onLogout}
+              onClick={() =>
+                signOut({
+                  callbackUrl: "/app",
+                })
+              }
               className="cursor-pointer text-red-500"
             >
               Déconnexion
