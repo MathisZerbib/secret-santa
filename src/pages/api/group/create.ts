@@ -48,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       // Ajouter l'appManagerId à l'utilisateur
-      const user = await prisma.user.update({
+      await prisma.user.update({
         where: { email: managerEmail },
         data: {
           appManagerId: manager.id,

@@ -39,7 +39,7 @@ const HeaderSession: FC = () => {
         console.log(session?.user?.image);
       }
     }
-  }, [session]);
+  }, [router.pathname, session]);
 
   const userName = session?.user?.name || "User";
   const userImage = session?.user?.image || "/santa-og-1.png";
