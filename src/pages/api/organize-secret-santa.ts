@@ -86,21 +86,20 @@ async function sendSecretSantaEmail(
   const msg = {
     to: giver.email,
     from: process.env.SENDGRID_FROM_EMAIL as string,
-    subject: "Your Secret Santa Assignment",
-    text: `Hello ${giver.name},
+    subject: "Votre assignation pour le Secret Santa",
+    text: `Bonjour ${giver.name},
 
-You've been assigned to be the Secret Santa for ${receiver.name}.
+Vous avez été assigné pour être le Secret Santa de ${receiver.name}.
 
-Here is ${receiver.name}'s gift list:
+Voici sa liste de cadeaux qui pourrait vous inspirer:
 
 ${receiver.gifts
-  .map(
-    (gift) =>
-      `- ${gift.name}${gift.link ? ` (${gift.link})` : ""}${
-        gift.bought ? " (already bought)" : ""
-      }`
-  )
-  .join("\n")}
+        .map(
+          (gift) =>
+            `- ${gift.name}${gift.link ? ` (${gift.link})` : ""}${gift.bought ? " (already bought)" : ""
+            }`
+        )
+        .join("\n")}
 
 Happy gifting!`,
     html: `
