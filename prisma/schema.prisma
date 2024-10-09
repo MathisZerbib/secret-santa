@@ -70,8 +70,7 @@ model User {
   sessions         Session[]
   googleId         String?     @unique
   appManager       AppManager? @relation(fields: [appManagerId], references: [id])
-
-  appManagerId Int?
+  appManagerId     Int?
 }
 
 model VerificationToken {

@@ -8,10 +8,8 @@ const prisma = new PrismaClient();
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method === "GET") {
         try {
-            console.log("Received GET request");
 
             const session = await getServerSession(req, res, authOptions);
-            console.log("Session:", session);
 
             if (!session) {
                 console.log("Unauthorized Session");
@@ -19,7 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             const userId = session.user?.id;
-            console.log("User ID:", userId);
 
             if (!userId) {
                 console.log("Unauthorized user");
