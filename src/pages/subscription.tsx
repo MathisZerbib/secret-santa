@@ -1,5 +1,5 @@
 "use client";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { subscription } from "../../constants";
@@ -17,20 +17,13 @@ function SubscriptionPage() {
     }
   }, [status, router]);
 
-  const handleLogout = async () => {
-    await signOut({ redirect: true, callbackUrl: "/app" });
-  };
-
   if (status === "loading") {
     return <Loader />;
   }
 
   return (
     <div>
-      <HeaderSession
-        userName={session?.user?.name || ""}
-        onLogout={() => handleLogout()}
-      />
+      <HeaderSession />
       <div className="flex flex-col items-center justify-center py-20">
         <div className="m-auto w-fit flex flex-col">
           <h1 className="text-3xl font-bold text-center mb-20 sm:mb-10 md:mb-16 text-white">
