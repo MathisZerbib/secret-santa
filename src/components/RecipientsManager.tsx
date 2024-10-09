@@ -17,7 +17,7 @@ const RecipientsManager: React.FC<RecipientsManagerProps> = ({
   const [newName, setNewName] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [filter, setFilter] = useState("");
-  const [isFilterExpanded, setIsFilterExpanded] = useState(false);
+  const [isFilterExpanded, setIsFilterExpanded] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

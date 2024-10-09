@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <div className="relative min-h-screen overflow-hidden">
           {/* Shader background with smooth fade-in */}
           <motion.div
-            className="absolute inset-0 z-0"
+            className="absolute inset-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}

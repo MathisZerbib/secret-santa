@@ -5,19 +5,36 @@ import prisma from "../../../../prisma/prisma";
 import Stripe from "stripe";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-
 export const authOptions: NextAuthOptions = {
 	adapter: PrismaAdapter(prisma) as Adapter,
 	providers: [
 		GoogleProvider({
 			clientId: process.env.GOOGLE_CLIENT_ID!,
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-			allowDangerousEmailAccountLinking: true,
 		}),
 	],
 	secret: process.env.NEXTAUTH_SECRET,
 
 	callbacks: {
+		async signIn({ user, account }) {
+			if (account?.provider === "google") {
+				const existingUser = await prisma.user.findUnique({
+					where: { email: user.email! },
+				});
+
+				if (existingUser) {
+					// If the user exists but doesn't have a Google account linked
+					if (!existingUser.googleId) {
+						await prisma.user.update({
+							where: { id: existingUser.id },
+							data: { googleId: user.id },
+						});
+					}
+					return true;
+				}
+			}
+			return true;
+		},
 		async session({ session, user }) {
 			session!.user!.id = user.id;
 			session!.user!.stripeCustomerId = user.stripeCustomerId;

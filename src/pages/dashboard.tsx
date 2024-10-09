@@ -33,7 +33,6 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (status === "authenticated") {
-      console.log(session);
       if (!session?.user?.isActive) {
         router.push("/subscription");
       } else {

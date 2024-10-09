@@ -1,3 +1,4 @@
+// components/HeaderSession.tsx
 import { FC, useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -9,10 +10,10 @@ import {
 import ManageSubscription from "@/components/ManageSubscription";
 import { useRouter } from "next/router";
 import { useSession, signOut } from "next-auth/react"; // Import useSession and signOut
-import { FaArrowLeft } from "react-icons/fa";
+import GoBackBtn from "@/components/GoBackBtn"; // Import GoBackBtn
 
 const HeaderSession: FC = () => {
-  const { data: session } = useSession(); // Use useSession to get session data
+  const { data: session } = useSession();
   const [isManageSubscriptionOpen, setIsManageSubscriptionOpen] =
     useState(false);
   const [isManager, setIsManager] = useState(false);
@@ -21,53 +22,54 @@ const HeaderSession: FC = () => {
   const closeManageSubscription = () => setIsManageSubscriptionOpen(false);
 
   useEffect(() => {
-    const checkIfManager = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/check-manager`
-      );
-      const data = await response.json();
-      setIsManager(data.isManager);
-    };
-    if (session) {
-      checkIfManager();
-      console.log(session?.user?.image);
+    if (
+      router.pathname.includes("/group") ||
+      router.pathname.includes("/admin") ||
+      router.pathname.includes("/dashboard")
+    ) {
+      const checkIfManager = async () => {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/check-manager`
+        );
+        const data = await response.json();
+        setIsManager("isManager" in data ? data.isManager : false);
+      };
+      if (session) {
+        checkIfManager();
+        console.log(session?.user?.image);
+      }
     }
   }, [session]);
 
-  const goBack = (from: string) => {
-    switch (from) {
-      case "admin":
-        router.push("/admin");
-        break;
-
-      case "group":
-        router.push("/dashboard");
-        break;
-
-      default:
-        router.push("/app");
-        break;
-    }
-  };
-
   const userName = session?.user?.name || "User";
   const userImage = session?.user?.image || "/santa-og-1.png";
+
+  const getPageName = (path: string) => {
+    switch (path) {
+      case "admin":
+        return "Espace Administrateur";
+
+      case "dashboard":
+        return "Tableau de bord";
+
+      case "group":
+        return "Groupe";
+
+      default:
+        return "Secret Santa";
+    }
+  };
 
   return (
     <header className="flex flex-col justify-center mx-auto p-8 backdrop-blur-md bg-white bg-opacity-10 shadow-xl overflow-hidden w-full">
       <div className="container mx-auto flex justify-between items-center">
         {/* Back Button */}
-        <button
-          onClick={() => {
-            goBack(router.pathname.split("/")[1]);
-          }}
-          className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
-        >
-          <FaArrowLeft className=" text-white" />
-        </button>
+        <GoBackBtn />
 
         {/* Logo */}
-        <div className="text-2xl font-bold">Secret Santa</div>
+        <div className="text-2xl font-bold">
+          {getPageName(router.pathname.split("/")[1] || "")}
+        </div>
 
         {/* User Dropdown Menu */}
         <DropdownMenu>

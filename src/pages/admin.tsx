@@ -45,23 +45,21 @@ const AdminPage: React.FC<AdminPageProps> = ({
   };
 
   return (
-    <div>
+    <div className="relative flex flex-col min-h-screen">
       <HeaderSession />
-
-      <div className="container mx-auto p-6 flex flex-col items-center h-full">
-        <h1 className="text-3xl font-bold mb-6 text-center">
-          Espace Administrateur
-        </h1>
-        <p className="text-lg mb-8 text-center">
+      <Card className="bg-white bg-opacity-20 mb-8 p-8 mt-8 mx-8">
+        <p className="text-center text-white text-lg">
           Bienvenue dans l&apos;espace administrateur. Ici, vous pouvez gérer
           les participants et organiser un Secret Santa.
         </p>
+      </Card>
+      <div className="flex-grow flex flex-col items-center justify-start px-8 my-8">
         <div className="flex justify-center items-center w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl font-semibold">
-                  Organisez la liste des participantsz
+                  Organisez la liste des participants
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -107,7 +105,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
                   >
                     {isOrganizing
                       ? "Secret Santa est en route !"
-                      : "Envoyez une campagne de mails groupée 🎁"}
+                      : "Mails groupés 🎁"}
                   </Button>
                   {error && (
                     <p className="text-red-500 mt-2 text-sm">{error}</p>

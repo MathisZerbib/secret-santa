@@ -7,10 +7,7 @@ interface LoaderProps {
   color?: string;
 }
 
-const Loader: React.FC<LoaderProps> = ({
-  size = 40,
-  color = "hsl(222.2 84% 4.9%)",
-}) => {
+const Loader: React.FC<LoaderProps> = ({ size = 40, color = "#ffffff" }) => {
   return (
     <div
       className="flex items-center justify-center"
