@@ -8,21 +8,26 @@ import HeaderSession from "@/components/HeaderSession";
 import { useSession } from "next-auth/react";
 import HeaderGuest from "@/components/HeaderGuest";
 
-const checkGroupExists = async (groupId: string): Promise<boolean> => {
+interface Group {
+  id: string;
+  name: string;
+}
+
+const getGroupDetails = async (groupId: string): Promise<Group | null> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/api/group/get?groupId=${groupId}`
     );
 
     if (!response.ok) {
-      return false;
+      return null;
     }
 
     const group = await response.json();
-    return !!group;
+    return group;
   } catch (error) {
-    console.error("Error checking group existence:", error);
-    return false;
+    console.error("Error fetching group details:", error);
+    return null;
   }
 };
 
@@ -50,17 +55,20 @@ const GroupPage = () => {
   const { id, inviteCode } = router.query;
   const [isLoading, setIsLoading] = useState(true);
   const [gifts, setGifts] = useState<Gift[]>([]);
+  const [group, setGroup] = useState<Group | null>(null);
   const { data: session } = useSession();
 
   useEffect(() => {
     if (id) {
       const fetchGroupAndGifts = async () => {
-        const groupExists = await checkGroupExists(id as string);
-        if (!groupExists) {
+        const groupDetails = await getGroupDetails(id as string);
+        if (!groupDetails) {
           router.push("/app");
           console.error("Group does not exist");
           return;
         }
+
+        setGroup(groupDetails);
 
         const giftsData = await getGiftsByGroupId(id as string);
         setGifts(giftsData);
@@ -87,7 +95,8 @@ const GroupPage = () => {
           <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden p-6">
             <MainContent
               initialGifts={gifts}
-              inviteCode={inviteCode as string}
+              inviteCode={typeof inviteCode === "string" ? inviteCode : ""}
+              groupName={group?.name || ""}
             />
           </div>
         </div>

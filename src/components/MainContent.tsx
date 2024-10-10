@@ -10,9 +10,14 @@ import { motion } from "framer-motion";
 interface MainContentProps {
   initialGifts: Gift[];
   inviteCode: string;
+  groupName: string; // Add groupName to the props
 }
 
-function MainContent({ initialGifts, inviteCode }: MainContentProps) {
+function MainContent({
+  initialGifts,
+  inviteCode,
+  groupName,
+}: MainContentProps) {
   const router = useRouter();
   const [gifts, setGifts] = useState(initialGifts);
   const [filter, setFilter] = useState("");
@@ -175,8 +180,8 @@ function MainContent({ initialGifts, inviteCode }: MainContentProps) {
         transition={{ delay: 0.4, duration: 0.5 }}
         className="max-w-2xl mx-auto p-6 rounded-lg shadow-md mt-2"
       >
-        <h2 className="text-xl font-semibold text-white">
-          Ajouter votre souhait de cadeau
+        <h2 className="text-xl font-semibold text-white mb-2">
+          Secret Santa - {groupName}
         </h2>
         {/* /Add a text that display the limit of € to wish gift/ */}
         <span className="text-white italic">20€ maximum</span>
