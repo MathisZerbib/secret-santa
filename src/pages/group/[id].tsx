@@ -47,7 +47,7 @@ const getGiftsByGroupId = async (groupId: string): Promise<Gift[]> => {
 
 const GroupPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id, inviteCode } = router.query;
   const [isLoading, setIsLoading] = useState(true);
   const [gifts, setGifts] = useState<Gift[]>([]);
   const { data: session } = useSession();
@@ -85,7 +85,10 @@ const GroupPage = () => {
       <div className="flex-grow flex items-center justify-center p-4">
         <div className="w-full max-w-2xl">
           <div className="backdrop-blur-md bg-white bg-opacity-10 rounded-2xl shadow-xl overflow-hidden p-6">
-            <MainContent initialGifts={gifts} />
+            <MainContent
+              initialGifts={gifts}
+              inviteCode={inviteCode as string}
+            />
           </div>
         </div>
       </div>

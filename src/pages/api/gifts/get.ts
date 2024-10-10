@@ -22,11 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             });
 
             if (!group) {
-                console.log(`Group with ID ${groupId} not found`);
                 return res.status(404).json({ error: 'Group not found' });
             }
 
-            console.log(`Group with ID ${groupId} found`);
 
             // Fetch gifts if the group exists
             const gifts = await prisma.gift.findMany({

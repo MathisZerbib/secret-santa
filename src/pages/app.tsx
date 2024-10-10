@@ -45,7 +45,7 @@ function App() {
 
       // Redirect to the group page
       const data = await response.json();
-      router.push(`/group/${data.groupId}`);
+      router.push(`/group/${data.groupId}?inviteCode=${inviteCode}`);
 
       return true;
     } catch (error) {

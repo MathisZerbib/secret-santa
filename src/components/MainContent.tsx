@@ -9,9 +9,10 @@ import { motion } from "framer-motion";
 
 interface MainContentProps {
   initialGifts: Gift[];
+  inviteCode: string;
 }
 
-function MainContent({ initialGifts }: MainContentProps) {
+function MainContent({ initialGifts, inviteCode }: MainContentProps) {
   const router = useRouter();
   const [gifts, setGifts] = useState(initialGifts);
   const [filter, setFilter] = useState("");
@@ -25,6 +26,12 @@ function MainContent({ initialGifts }: MainContentProps) {
       setSecretSantaGroupId(Number(id));
     }
   }, [router.query]);
+
+  useEffect(() => {
+    if (!inviteCode) {
+      router.push("/app");
+    }
+  }, [inviteCode, router]);
 
   // Polling to fetch updates periodically
   useEffect(() => {
