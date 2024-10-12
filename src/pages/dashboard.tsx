@@ -213,7 +213,10 @@ const Dashboard = () => {
                         <FaCopy />
                       </Button>
                     </div>
-                    <Link href={`/group/${group.id}`} passHref>
+                    <Link
+                      href={`/group/${group.id}?inviteCode=` + group.inviteCode}
+                      passHref
+                    >
                       <Button className="w-full mt-4 py-2 bg-white text-black rounded hover:bg-black hover:text-white transition-colors">
                         Voir les cadeaux
                       </Button>
